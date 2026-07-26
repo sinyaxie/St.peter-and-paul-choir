@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>St. Peter & Paul IFM Choir</title>
+<style>
+  :root{
+    --navy-deep:#0b0f2a;
+    --navy:#1a2456;
+    --navy-light:#2c3f7c;
+    --blue:#2c4f9e;
+    --gold:#c9a24b;
+    --gold-light:#e8c977;
+    --maroon:#7c2333;
+    --cream:#f7f3ea;
+    --ink:#1b2440;
+    --muted:#5c6584;
+    --bg:#f5f1e8;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  h1,h2,h3{ font-family: Georgia, 'Times New Roman', serif; }
+  .app{ max-width:480px; margin:0 auto; min-height:100vh; background:#fff; position:relative; overflow-x:hidden; }
+
+  /* ---------------- HEADER ---------------- */
+  header.topbar{
+    display:flex; align-items:center; gap:12px;
+    padding:14px 18px;
+    border-bottom:3px solid transparent;
+    border-image: linear-gradient(90deg, var(--gold), var(--maroon), var(--navy)) 1;
+    position:sticky; top:0; background:#fff; z-index:20;
+  }
+  .avatar{
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; flex-shrink:0; border:2px solid var(--gold); overflow:hidden;
+  }
+  .brand{ flex:1; min-width:0; }
+  .brand h1{ font-size:16px; color:var(--navy); line-height:1.25; }
+  .brand .tag{ display:flex; align-items:center; gap:5px; color:var(--blue); font-size:12.5px; margin-top:2px;}
+  .hamburger{
+    background:#eef2f9; border:none; width:44px; height:44px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; font-size: 20px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* ---------------- MAIN PAGES ---------------- */
+  .page{ display:none; }
+  .page.active{ display:block; }
+
+  /* ---- Front / Home ---- */
+  .hero{ padding:34px 22px 6px; text-align:center; }
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#faf3e2; color:var(--maroon); font-size:13px; font-weight:bold;
+    padding:8px 18px; border-radius:999px; margin-bottom:22px; border:1px solid #ecdbb0;
+  }
+  .hero h2{ font-size:32px; line-height:1.2; color:var(--navy); margin-bottom:16px; }
+  .hero p{ color:var(--muted); font-size:15px; line-height:1.6; margin-bottom:26px; }
+  .hero-buttons{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:36px; }
+  
+  .btn-solid{
+    background: linear-gradient(120deg, var(--blue), var(--navy));
+    color:#fff; border:none; padding:14px 22px; border-radius:999px;
+    font-weight:bold; font-size:14.5px; display:flex; align-items:center; gap:8px; cursor:pointer;
+  }
+  .btn-outline{
+    background:#fff; color:var(--navy); border:1.5px solid var(--navy);
+    padding:14px 22px; border-radius:999px; font-weight:bold; font-size:14.5px;
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+  }
+
+  .gallery-card{
+    margin:0 18px 26px; background:#fbfbfd; border-radius:22px; padding:20px 18px 22px;
+    box-shadow:0 8px 24px rgba(20,30,70,0.06);
+  }
+  .gallery-card h3{ font-size:17px; color:var(--navy); display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  .marquee-wrap{
+    overflow:hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
+  .marquee-track{
+    display:flex; gap:12px; width:max-content;
+    animation: marqueeScroll 22s linear infinite;
+  }
+  .marquee-wrap:hover .marquee-track{ animation-play-state: paused; }
+  @keyframes marqueeScroll{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  .gallery-item{ flex:0 0 auto; width:180px; border-radius:14px; overflow:hidden; background:#e9edf6; }
+  .gallery-item img{ width:180px; height:180px; object-fit:cover; display:block; }
+  .gallery-item .cap{ font-size:13px; color:var(--navy); font-weight:600; padding:8px 4px 2px; text-align:center;}
+
+  .verse-card{
+    margin:0 18px 100px; background:#fff; border:1px solid #eef0f6; border-radius:22px;
+    padding:22px 18px; text-align:center;
+  }
+  .verse-card .cross{ font-size:26px; color:var(--blue); margin-bottom:8px; }
+  .verse-card p{ color:var(--muted); font-size:13.5px; font-style:italic; }
+
+  /* Floating song alert */
+  #songAlert{
+    position:fixed; bottom:0; left:0; right:0;
+    max-width:480px; margin:0 auto;
+    background: linear-gradient(120deg, var(--navy-light), var(--navy-deep));
+    color:#fff; padding:18px 18px 22px; border-radius:20px 20px 0 0;
+    display:flex; gap:14px; align-items:center; z-index:80;
+    box-shadow:0 -10px 30px rgba(0,0,0,0.25);
+  }
+  #songAlert .close-x{
+    position:absolute; top:10px; right:14px; background:rgba(255,255,255,0.15);
+    border:none; color:#fff; width:26px; height:26px; border-radius:50%; cursor:pointer;
+  }
+  #songAlert .thumb{
+    width:52px; height:52px; border-radius:14px; background:var(--gold);
+    display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;
+  }
+  #songAlert .info{ flex:1; }
+  #songAlert .tagline{
+    display:inline-flex; align-items:center; gap:4px; background:rgba(255,255,255,0.15);
+    font-size:10.5px; font-weight:bold; letter-spacing:.5px; padding:3px 9px; border-radius:999px; margin-bottom:6px;
+  }
+  #songAlert .title{ font-weight:bold; font-size:15px; margin-bottom:4px; }
+  #songAlert .sub{ font-size:12.5px; opacity:.85; display:flex; align-items:center; gap:5px; }
+  #songAlert .play{
+    width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.18);
+    border:none; color:#fff; font-size:16px; cursor:pointer; flex-shrink:0;
+  }
+
+  /* ---- Inner Pages ---- */
+  .inner-page{ padding:20px 16px 60px; }
+  .inner-header{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .back-btn{
+    background:#eef2f9; border:none; width:38px; height:38px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; color:var(--navy);
+  }
+  .inner-header h2{ font-size:20px; color:var(--navy); }
+
+  .content-card{
+    background:#fbfbfd; border-radius:18px; padding:18px; margin-bottom:16px;
+    box-shadow:0 6px 18px rgba(20,30,70,0.05); border: 1px solid #eef0f6;
+  }
+  .content-card h4{ color:var(--navy); font-size:16px; margin-bottom:6px; font-family:Georgia, serif;}
+  .content-card p{ color:var(--muted); font-size:14px; line-height:1.55; }
+
+  /* ---------------- MUUNDO MPYA WA MATANGAZO (EVENTS) ---------------- */
+  .events-banner{
+    background: linear-gradient(135deg, #024596 0%, #002254 100%);
+    border-radius:24px; padding:24px 20px; color:#fff; margin-bottom:20px;
+    box-shadow:0 12px 30px rgba(0,34,84,0.18);
+  }
+  .events-banner .badge{
+    display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.15);
+    padding:6px 14px; border-radius:999px; font-size:12.5px; font-weight:600; margin-bottom:14px;
+  }
+  .events-banner h1{ font-size:28px; margin-bottom:10px; font-family:Georgia, serif; }
+  .events-banner p{ font-size:13.5px; opacity:0.9; line-height:1.5; color:#dbe2ef; }
+
+  .filter-tabs{ display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+  .tab-btn{
+    padding:10px 16px; border-radius:12px; font-size:13px; font-weight:bold; border:none; cursor:pointer;
+    background:#fff; color:var(--navy); border:1px solid #e2e8f0; display:flex; align-items:center; gap:6px;
+  }
+  .tab-btn.active{ background:#024596; color:#fff; border-color:#024596; }
+
+  .event-card{
+    background:#fff; border-radius:20px; border:1px solid #e2e8f0; overflow:hidden;
+    margin-bottom:20px; box-shadow:0 8px 20px rgba(0,0,0,0.04);
+  }
+  .event-img-wrap{ position:relative; width:100%; height:190px; background:#e2e8f0; }
+  .event-img-wrap img{ width:100%; height:100%; object-fit:cover; }
+  .event-date-badge{
+    position:absolute; top:12px; right:12px; background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(4px); color:#1e293b; font-size:12px; font-weight:bold;
+    padding:6px 12px; border-radius:10px; display:flex; align-items:center; gap:5px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  }
+  .event-body{ padding:18px; }
+  .event-status{
+    display:inline-flex; align-items:center; gap:4px; background:#e0f2fe; color:#0369a1;
+    font-size:11.5px; font-weight:bold; padding:4px 10px; border-radius:999px; margin-bottom:10px;
+  }
+  .event-status.past{ background:#f1f5f9; color:#64748b; }
+  .event-title{ font-size:18px; color:#0f172a; margin-bottom:8px; font-family:Georgia, serif; }
+  .event-meta-row{ display:flex; align-items:center; gap:16px; font-size:12.5px; color:#64748b; margin-bottom:12px; }
+  .event-desc{ font-size:13.5px; color:#475569; line-height:1.5; }
+
+  /* ---- Music Library ---- */
+  .search-card{
+    background:#fff; border:1px solid #eef0f6; border-radius:20px; padding:18px;
+    box-shadow:0 6px 18px rgba(20,30,70,0.05); margin-bottom:22px;
+  }
+  .field-label{ font-size:11.5px; font-weight:bold; letter-spacing:1.5px; color:var(--muted); margin-bottom:8px; }
+  .search-input{
+    width:100%; padding:13px 14px; border-radius:12px; border:1px solid #e3e7f0;
+    background:#f7f8fb; font-size:14px; color:var(--ink); outline:none;
+  }
+  .genre-row{ display:flex; gap:10px; }
+  .genre-select{ flex:1; padding:13px 12px; border-radius:12px; border:1px solid #e3e7f0; background:#fff; font-size:14px; color:var(--ink); }
+  .filter-btn{
+    background: linear-gradient(120deg, var(--blue), var(--navy)); color:#fff; border:none;
+    padding:0 18px; border-radius:12px; font-weight:bold; font-size:14px; cursor:pointer;
+  }
+
+  .collection-pill{
+    display:flex; align-items:center; gap:12px; justify-content:center; margin-bottom:20px;
+    font-size:12.5px; font-weight:bold; letter-spacing:1px; color:var(--navy);
+  }
+  .collection-pill .line{ flex:1; height:1px; background:#e3e7f0; }
+  .count-badge{ background:#dbe7fb; color:var(--navy); padding:2px 9px; border-radius:999px; margin-left:6px; font-size:12px; }
+
+  .song-card2{ border-radius:20px; overflow:hidden; margin-bottom:18px; background:#fff; box-shadow:0 8px 22px rgba(20,30,70,0.08); }
+  .song-header-bar{ background: linear-gradient(120deg, var(--navy-light), var(--navy-deep)); display:flex; align-items:center; gap:12px; padding:16px 16px; }
+  .song-icon-circle{ width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0; }
+  .song-tag-pill{ background:rgba(255,255,255,0.18); color:#fff; font-size:12.5px; font-weight:600; padding:6px 14px; border-radius:999px; }
+  .song-duration{ margin-left:auto; background:rgba(255,255,255,0.15); color:#fff; font-size:12.5px; padding:6px 12px; border-radius:999px; }
+  .song-body{ padding:18px 18px 20px; }
+  .song-title{ font-family:Georgia, serif; font-size:20px; color:var(--ink); margin-bottom:4px; }
+  .song-composer{ color:var(--muted); font-size:13.5px; margin-bottom:14px;}
+  .song-buttons{ display:flex; gap:10px; margin-bottom:10px; }
+  .sbtn{ flex:1; display:flex; align-items:center; justify-content:center; gap:7px; padding:12px 10px; border-radius:12px; font-size:14px; font-weight:bold; cursor:pointer; border:none; text-decoration:none; }
+  .sbtn.watch{ background:#e0342c; color:#fff; }
+  .sbtn.sheet{ background:#1e9e5a; color:#fff; }
+  .sbtn.info{ width:100%; background:#f2f3f7; color:var(--ink); border:1px solid #e6e8f0; }
+  .info-panel{ margin-top:10px; background:#f7f8fb; border-radius:10px; padding:12px 14px; font-size:13.5px; color:var(--muted); line-height:1.5; }
+
+  /* ---- Modals ---- */
+  .modal-backdrop{
+    position:fixed; inset:0; background:rgba(10,15,35,0.65); backdrop-filter:blur(3px); z-index:100;
+    display:none; align-items:center; justify-content:center; padding:20px 16px;
+  }
+  .custom-modal{ background:#fff; border-radius:26px; padding:24px 20px; max-width:420px; width:100%; box-shadow:0 25px 60px rgba(0,0,0,0.35); max-height:90vh; overflow-y:auto; }
+  .custom-modal h2{ color:var(--navy); font-size:22px; margin-bottom:8px; text-align:center; }
+  .custom-modal p.desc{ color:var(--muted); font-size:13px; line-height:1.5; margin-bottom:16px; text-align:center; }
+  
+  .bank-card{ background:#eef2fb; border-radius:18px; padding:16px; margin-bottom:16px; }
+  .bank-header{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .bank-icon{ width:40px; height:40px; border-radius:12px; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .bank-title{ font-weight:bold; color:var(--ink); font-size:15px; }
+  .bank-sub{ color:var(--muted); font-size:12px; }
+  .bank-row{ display:flex; justify-content:space-between; align-items:center; gap:10px; background:#fff; border-radius:10px; padding:10px 12px; margin-bottom:8px; font-size:13px; }
+  .bank-row.highlight{ border:1.5px solid var(--blue); }
+  .bank-label{ color:var(--muted); }
+  .bank-value{ font-weight:bold; color:var(--ink); text-align:right; }
+  
+  .copy-btn{ width:100%; padding:11px; border:none; border-radius:10px; background: linear-gradient(120deg, var(--blue), var(--navy)); color:#fff; font-weight:bold; font-size:13.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+
+  .form-group{ margin-bottom:12px; text-align:left; }
+  .form-group label{ display:block; font-size:11.5px; font-weight:bold; color:var(--ink); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;}
+  .form-group input, .form-group select, .form-group textarea{ width:100%; padding:11px; border-radius:10px; border:1px solid #cbd5e1; background:#f8fafc; font-size:13.5px; outline:none; }
+
+  /* ---------------- DRAWER MENU ---------------- */
+  #overlayBackdrop{ position:fixed; inset:0; background:rgba(10,15,35,0.5); z-index:9000; display:none; }
+  #drawer{ position:fixed; top:0; right:-320px; width:290px; max-width:82vw; height:100%; background:#fff; z-index:9999; box-shadow:-10px 0 30px rgba(0,0,0,0.25); transition:right .28s ease; padding:22px 18px; overflow-y:auto; }
+  #drawer.open{ right:0 !important; }
+  .drawer-header{ display:flex; align-items:center; gap:12px; padding-bottom:16px; border-bottom:1px solid #eee; margin-bottom:14px; }
+  .drawer-header .logo-sq{ width:42px; height:42px; border-radius:12px; background: linear-gradient(160deg, var(--navy-light), var(--navy-deep)); display:flex; align-items:center; justify-content:center; color:var(--gold-light); font-size:18px; flex-shrink:0; overflow:hidden;}
+  .drawer-header .t1{ font-size:15.5px; font-weight:bold; color:var(--ink); }
+  .drawer-header .t2{ font-size:11.5px; color:var(--navy-light); }
+  .drawer-header .close-x{ margin-left:auto; background:none; border:none; font-size:19px; color:#9aa0b8; cursor:pointer; }
+
+  .menu-item{ display:flex; align-items:center; gap:14px; padding:13px 12px; border-radius:14px; background:transparent; border:none; width:100%; cursor:pointer; text-align:left; font-size:15px; color:var(--ink); margin-bottom:4px; }
+  .menu-item:hover, .menu-item.active{ background:#eef1fb; font-weight:600; }
+  .menu-item .m-icon{ width:32px; height:32px; border-radius:99px; background:#eef1fb; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--navy-light); flex-shrink:0; }
+  .drawer-divider{ height:1px; background:#eee; margin:12px 0; }
+  .support-btn{ width:100%; padding:13px 12px; border-radius:14px; border:none; background:#eef1fb; color:var(--navy-light); font-weight:bold; font-size:14.5px; display:flex; align-items:center; gap:10px; cursor:pointer; margin-bottom:10px; }
+  .admin-btn{ width:100%; padding:14px 12px; border-radius:14px; border:none; background: linear-gradient(120deg, var(--navy), var(--navy-deep)); color:#fff; font-weight:bold; font-size:14.5px; display:flex; align-items:center; gap:10px; cursor:pointer; }
+  .drawer-footer{ text-align:center; margin-top:20px; padding-top:14px; border-top:1px solid #eee; }
+
+  /* ---------------- ADMIN LOGIN & DASHBOARD ---------------- */
+  #page-login{ position:fixed; inset:0; z-index:10000; display:none; background: radial-gradient(circle at 50% 0%, var(--navy-light) 0%, var(--navy) 45%, var(--navy-deep) 100%); overflow-y:auto; padding: 32px 16px 60px; }
+  #page-login.active{ display:block; }
+  .login-wrap{ max-width:420px; margin:0 auto; font-family: Georgia, serif; }
+  .emblem-wrap{ display:flex; justify-content:center; margin-bottom:-46px; position:relative; z-index:2; }
+  .emblem{ width:130px; height:130px; background: linear-gradient(160deg, #14235a, #0a132e); border:2px solid var(--gold); border-radius:50%; box-shadow:0 18px 40px rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; overflow:hidden; padding:4px; }
+  .login-card{ background:var(--cream); border-radius:26px; padding:64px 26px 30px; box-shadow:0 25px 60px rgba(0,0,0,0.35); position:relative; z-index:1;}
+  .eyebrow{ text-align:center; color:var(--gold); letter-spacing:2.5px; font-size:12px; font-weight:bold; text-transform:uppercase; font-family:Arial, sans-serif; margin-bottom:8px;}
+  .login-card h1{ text-align:center; font-size:26px; color:var(--ink); margin-bottom:4px; }
+  .login-sub{ text-align:center; color:var(--muted); font-family:Arial, sans-serif; font-size:13.5px; margin-bottom:24px;}
+  
+  .field{ position:relative; margin-bottom:14px;}
+  .field input{ width:100%; padding:13px 42px 13px 40px; border-radius:14px; border:1px solid #e3ddcc; background:#fff; font-family:Arial, sans-serif; font-size:14.5px; color:var(--ink); outline:none; }
+  .field .icon{ position:absolute; left:13px; top:50%; transform:translateY(-50%); color:#9aa0b8; font-size:14px;}
+  .field .toggle-eye{ position:absolute; right:13px; top:50%; transform:translateY(-50%); cursor:pointer; color:#9aa0b8; font-size:14px; background:none; border:none;}
+  .error-msg{ display:none; background:#fdecec; color:#b3261e; font-family:Arial, sans-serif; font-size:12.5px; padding:9px 11px; border-radius:10px; margin-bottom:12px;}
+  
+  .btn-primary{ width:100%; margin-top:12px; padding:15px; border:none; border-radius:14px; background: linear-gradient(120deg, var(--navy-light), var(--navy-deep)); color:#fff; font-family:Arial, sans-serif; font-size:15.5px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 10px 24px rgba(13,27,61,0.35); }
+  .divider{ display:flex; align-items:center; gap:12px; margin:24px 0 12px; color:#b9b3a0; font-family:Arial, sans-serif; font-size:10.5px; letter-spacing:2px; text-transform:uppercase;}
+  .divider::before, .divider::after{ content:""; flex:1; height:1px; background:#e3ddcc; }
+  .back-link{ display:flex; align-items:center; justify-content:center; gap:8px; color:var(--navy); text-decoration:none; font-family:Arial, sans-serif; font-size:14px; font-weight:600; background:none; border:none; width:100%; cursor:pointer; padding:6px;}
+
+  .dash-card{ background:#fff; border-radius:16px; padding:16px; margin-bottom:14px; border:1px solid #e2e8f0; font-family:Arial, sans-serif;}
+  .dash-badge{ background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-size:11px; font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== HEADER ===== -->
+  <header class="topbar" id="mainHeader">
+    <div class="avatar"><img src="image4.jpg" alt="Nembo ya Kwaya" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+    <div class="brand">
+      <h1>St. Peter & Paul IFM Choir</h1>
+      <div class="tag">🎵 Enjoy Holy Music</div>
+    </div>
+    <button class="hamburger" id="hamburgerBtn" onclick="openDrawer();" aria-label="Fungua menu">☰</button>
+  </header>
+
+  <!-- ===== FRONT PAGE / NYUMBANI ===== -->
+  <div id="page-front" class="page active">
+    <section class="hero">
+      <div class="pill">〰️ Welcome to Our Family</div>
+      <h2>Voices of Mercy, Harmony of Faith</h2>
+      <p>Tukiongozwa na upendo wa Watakatifu Petro na Paulo, kwaya yetu inainua nyimbo takatifu kwa Kiswahili na Kiingereza — tukiimba kwa umoja, imani na furaha katika Chuo cha Usimamizi wa Fedha (IFM), Dar es Salaam.</p>
+      <div class="hero-buttons">
+        <button class="btn-solid" onclick="showPage('page-music')">🎧 Listen to Holy Music</button>
+        <button class="btn-outline" onclick="openJoinModal()">➕ Join the Choir</button>
+      </div>
+    </section>
+
+    <div class="gallery-card">
+      <h3>🖼️ Nyakati za Kwaya na Huduma</h3>
+      <div class="marquee-wrap">
+        <div class="marquee-track">
+          <div class="gallery-item">
+            <img src="image5.jpg" alt="Kwaya">
+            <div class="cap">Kwaya Ikiimba Ibadani</div>
+          </div>
+          <div class="gallery-item">
+            <img src="image5.jpg" alt="Kwaya">
+            <div class="cap">Sherehe ya Kwaya</div>
+          </div>
+          <div class="gallery-item">
+            <img src="image5.jpg" alt="Kwaya">
+            <div class="cap">Umoja wa Waimbaji</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verse-card">
+      <div class="cross">✝️</div>
+      <p>"Mwimbieni Bwana wimbo mpya, maana ametenda mambo ya ajabu." — Zaburi 98</p>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT US ===== -->
+  <div id="page-about" class="page inner-page">
+    <div class="inner-header">
+      <button class="back-btn" onclick="showPage('page-front')">←</button>
+      <h2>Kuhusu Sisi</h2>
+    </div>
+    <div class="content-card">
+      <h4>Historia Yetu</h4>
+      <p>Kwaya ya Watakatifu Petro na Paulo ni kwaya ya Chuo cha Usimamizi wa Fedha (IFM), Dar es Salaam, ikiwa na lengo la kuinua nyimbo takatifu kwa Kiswahili na Kiingereza, tukifuata mfano wa umoja na uongozi wa Mitume Petro na Paulo.</p>
+    </div>
+    <div class="content-card">
+      <h4>Dhamira Yetu</h4>
+      <p>Kuunganisha waumini kupitia muziki wa kiroho, kuimarisha imani, na kuleta faraja kwa jamii kwa njia ya sauti na sala.</p>
+    </div>
+    <div class="content-card">
+      <h4>Jiunge Nasi</h4>
+      <p>Tunakaribisha wanafunzi na waumini wenye kipaji cha kuimba au kupiga ala za muziki kujiunga na kwaya yetu.</p>
+      <button class="btn-solid" style="margin-top:12px; width:100%; justify-content:center;" onclick="openJoinModal()">📋 Jaza Fomu ya Kujiunga</button>
+    </div>
+  </div>
+
+  <!-- ===== EVENTS & ANNOUNCEMENTS (MUUNDO MPYA) ===== -->
+  <div id="page-events" class="page inner-page">
+    <div class="inner-header">
+      <button class="back-btn" onclick="showPage('page-front')">←</button>
+      <h2>Matukio & Matangazo</h2>
+    </div>
+
+    <!-- Blue Header Banner -->
+    <div class="events-banner">
+      <div class="badge">📅 Events</div>
+      <h1>Our Events</h1>
+      <p>Relive moments of sacred music and join us for upcoming gatherings.</p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-tabs">
+      <button class="tab-btn active" id="btnFilterUpcoming" onclick="filterEvents('upcoming')">📅 Upcoming</button>
+      <button class="tab-btn" id="btnFilterPast" onclick="filterEvents('past')">⏱️ Past Events</button>
+      <button class="tab-btn" id="btnFilterAll" onclick="filterEvents('all')">📋 All Events</button>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px;">
+      <span style="height:1px; background:#cbd5e1; flex:1;"></span>
+      <span id="eventCategoryTitle" style="font-size:12px; font-weight:bold; color:var(--navy); letter-spacing:1px; background:#e0f2fe; padding:4px 12px; border-radius:999px;">
+        📅 UPCOMING EVENTS <span id="eventCountBadge" style="background:#024596; color:#fff; padding:1px 7px; border-radius:999px; font-size:11px;">0</span>
+      </span>
+      <span style="height:1px; background:#cbd5e1; flex:1;"></span>
+    </div>
+
+    <!-- Container ya Matangazo yote -->
+    <div id="announcementsContainer"></div>
+  </div>
+
+  <!-- ===== MUSIC LIBRARY ===== -->
+  <div id="page-music" class="page inner-page">
+    <div class="inner-header">
+      <button class="back-btn" onclick="showPage('page-front')">←</button>
+      <h2>Maktaba ya Nyimbo</h2>
+    </div>
+
+    <div class="search-card">
+      <div class="field-label">🔍 SEARCH</div>
+      <input type="text" id="songSearch" class="search-input" placeholder="Search by title or composer..." oninput="renderSongs()">
+
+      <div class="field-label" style="margin-top:16px;">▽ GENRE</div>
+      <div class="genre-row">
+        <select id="genreSelect" class="genre-select" onchange="renderSongs()">
+          <option value="All">All Genres</option>
+          <option value="Krismasi">Krismasi</option>
+          <option value="Worship">Worship</option>
+          <option value="Praise">Praise</option>
+        </select>
+        <button class="filter-btn" onclick="renderSongs()">🔍 Filter</button>
+      </div>
+    </div>
+
+    <div class="collection-pill">
+      <span class="line"></span>
+      <span>🎵 SONGS COLLECTION <span id="songCount" class="count-badge">0</span></span>
+      <span class="line"></span>
+    </div>
+
+    <div id="songsContainer"></div>
+  </div>
+
+  <!-- ===== NEW SONG ALERT (floating) ===== -->
+  <div id="songAlert">
+    <button class="close-x" onclick="document.getElementById('songAlert').style.display='none'">✕</button>
+    <div class="thumb">🎵</div>
+    <div class="info">
+      <div class="tagline">⚡ NEW SONG ALERT</div>
+      <div class="title">New song alert "Kuna Nini Leo Bethlehemu"</div>
+      <div class="sub">🎧 Tap to listen now</div>
+    </div>
+    <button class="play" onclick="window.open('https://youtu.be/T3SM8hJLZ78?si=Mk2iHCee2OKJt9KB','_blank')">▶</button>
+  </div>
+
+  <!-- ===== BACKDROP + DRAWER MENU ===== -->
+  <div id="overlayBackdrop" onclick="closeDrawer()"></div>
+  <div id="drawer">
+    <div class="drawer-header">
+      <div class="logo-sq"><img src="https://i.ibb.co/v6zcb4f3/image.jpg" alt="Nembo" style="width:100%;height:100%;object-fit:cover;"></div>
+      <div>
+        <div class="t1">IFM-FAMILY</div>
+        <div class="t2">St. Peter & Paul IFM Choir</div>
+      </div>
+      <button class="close-x" onclick="closeDrawer()">✕</button>
+    </div>
+
+    <button class="menu-item" onclick="goTo('page-front')"><span class="m-icon">🏠</span> Nyumbani</button>
+    <button class="menu-item" onclick="goTo('page-about')"><span class="m-icon">ℹ️</span> Kuhusu Sisi</button>
+    <button class="menu-item" onclick="goTo('page-events')"><span class="m-icon">📢</span> Matangazo & Matukio</button>
+    <button class="menu-item" onclick="goTo('page-music')"><span class="m-icon">🎵</span> Maktaba ya Nyimbo</button>
+
+    <div class="drawer-divider"></div>
+    <button class="support-btn" onclick="openSupport()">🤝 Changia Dhamira Yetu</button>
+    <button class="admin-btn" onclick="goToLogin()">🛡️ Sehemu ya Admin</button>
+
+    <div class="drawer-footer">
+      <div class="choir-name">🎵 St. Peter & Paul IFM Choir 🎵</div>
+      <div class="copy">© 2026 Enjoy the Holy Music</div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL 1: JOIN CHOIR FORM ===== -->
+  <div id="joinModal" class="modal-backdrop" onclick="closeJoinModal(event)">
+    <div class="custom-modal" onclick="event.stopPropagation()">
+      <h2>📋 Fomu ya Kujiunga</h2>
+      <p class="desc">Jaza taarifa zifuatazo kujiunga na Kwaya ya St. Peter & Paul IFM.</p>
+
+      <form onsubmit="return handleJoinSubmit(event)">
+        <div class="form-group">
+          <label>Jina Kamili</label>
+          <input type="text" id="joinName" placeholder="Mfano: John Bosco" required>
+        </div>
+        <div class="form-group">
+          <label>Namba ya Simu</label>
+          <input type="tel" id="joinPhone" placeholder="0712 345 678" required>
+        </div>
+        <div class="form-group">
+          <label>Sauti Unayoimba</label>
+          <select id="joinVoice" required>
+            <option value="">-- Chagua Sauti --</option>
+            <option value="Soprano">Soprano</option>
+            <option value="Alto">Alto</option>
+            <option value="Tenor">Tenor</option>
+            <option value="Bass">Bass</option>
+            <option value="Sijui / Natafuta">Sijui / Bado Natafuta</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-solid" style="width:100%; justify-content:center; margin-top:10px;">Tuma Maombi</button>
+        <button type="button" class="back-link" onclick="closeJoinModal()" style="margin-top:10px;">Kughairi</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL 2: SUPPORT OUR MISSION ===== -->
+  <div id="supportBackdrop" class="modal-backdrop" onclick="closeSupport(event)">
+    <div class="custom-modal" onclick="event.stopPropagation()">
+      <h2>🤝 Support Our Mission</h2>
+      <p class="desc">Mchango wako unasaidia huduma ya muziki mtakatifu. Tumia taarifa za NBC chini kisha jaza taarifa zako.</p>
+      
+      <div class="bank-card">
+        <div class="bank-header">
+          <div class="bank-icon">🏛️</div>
+          <div>
+            <div class="bank-title">NBC Bank Tanzania</div>
+            <div class="bank-sub">Direct bank deposit / Transfer</div>
+          </div>
+        </div>
+        <div class="bank-row">
+          <span class="bank-label">Akaunti Name:</span>
+          <span class="bank-value">St. Peter & Paul IFM Choir</span>
+        </div>
+        <div class="bank-row highlight">
+          <span class="bank-label">Akaunti Number:</span>
+          <span class="bank-value" id="acctNumber">0751 6600 0088</span>
+        </div>
+        <button class="copy-btn" onclick="copyAccount()">📋 Nakili Namba ya Akaunti</button>
+      </div>
+
+      <form onsubmit="return handleSupportSubmit(event)">
+        <div class="form-group">
+          <label>Jina Lako (au 'Anony')</label>
+          <input type="text" id="donorName" placeholder="Mfn: Bernard K. au Anony" required>
+        </div>
+        <div class="form-group">
+          <label>Kiasi Ulichotoa (TSH)</label>
+          <input type="text" id="donorAmount" placeholder="Mfn: TSH 50,000" required>
+        </div>
+        <div class="form-group">
+          <label>Ujumbe / Namba ya Muamala</label>
+          <textarea id="donorMsg" rows="2" placeholder="Andika ujumbe au kumbukumbu ya malipo..." required></textarea>
+        </div>
+        <button type="submit" class="btn-solid" style="width:100%; justify-content:center; background:linear-gradient(120deg, #10b981, #047857);">Tuma Taarifa za Mchango</button>
+        <button type="button" class="back-link" onclick="closeSupport()" style="margin-top:10px;">Funga</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN LOGIN & DASHBOARD PAGE ===== -->
+  <div id="page-login">
+    <div class="login-wrap">
+      <div class="emblem-wrap">
+        <div class="emblem"><img src="https://i.ibb.co/v6zcb4f3/image.jpg" alt="Nembo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+      </div>
+
+      <!-- Form ya Ingia Admin -->
+      <div class="login-card" id="adminLoginForm">
+        <div class="eyebrow">Uongozi wa Kwaya</div>
+        <h1>Karibu Tena</h1>
+        <div class="login-sub">St. Peter & Paul IFM Choir</div>
+
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+          <div class="field">
+            <span class="icon">✉️</span>
+            <input type="email" id="email" placeholder="st.peter@gmail.com" required>
+          </div>
+          <div class="field">
+            <span class="icon">🔒</span>
+            <input type="password" id="password" placeholder="Weka nenosiri" required>
+            <button type="button" class="toggle-eye" onclick="togglePassword()">👁️</button>
+          </div>
+          <div class="error-msg" id="errorMsg">Barua pepe au nenosiri si sahihi.</div>
+          <button type="submit" class="btn-primary" id="loginBtn">➜ Ingia Admin</button>
+        </form>
+
+        <div class="divider">St. Peter & Paul IFM Choir</div>
+        <button class="back-link" onclick="closeLogin()">← Rudi Kwenye Tovuti</button>
+      </div>
+
+      <!-- Dashboard ya Admin Panel -->
+      <div class="login-card" id="adminDashboardPanel" style="display:none; font-family:Arial, sans-serif;">
+        <div class="eyebrow">ADMIN DASHBOARD</div>
+        <h1 style="font-size:20px; margin-bottom:12px;">Paneli ya Uongozi</h1>
+
+        <!-- FOMU YA KUTOA TANGAZO JIPYA -->
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:16px; border-radius:18px; margin-bottom:20px;">
+          <h3 style="font-size:15px; color:#166534; margin-bottom:12px; font-family:Georgia, serif;">📢 Toa Tangazo / Tukio Jipya</h3>
+          <form onsubmit="return handlePostAnnouncement(event)">
+            <div class="form-group">
+              <label>Kichwa cha Tangazo</label>
+              <input type="text" id="annTitle" placeholder="Mfn: University examination" required>
+            </div>
+            <div class="form-group">
+              <label>Aina ya Tukio</label>
+              <select id="annType" required>
+                <option value="upcoming">Upcoming Event (Tukio Linalokuja)</option>
+                <option value="past">Past Event (Tukio Lililopita)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tarehe</label>
+              <input type="text" id="annDate" placeholder="Mfn: Jul 14, 2026" required>
+            </div>
+            <div class="form-group">
+              <label>Muda (Optional)</label>
+              <input type="text" id="annTime" placeholder="Mfn: 08:00">
+            </div>
+            <div class="form-group">
+              <label>Mahali / Location</label>
+              <input type="text" id="annLocation" placeholder="Mfn: IFM Main Hall / Location TBD">
+            </div>
+            <div class="form-group">
+              <label>Picha ya Bango (Image URL)</label>
+              <input type="url" id="annImage" placeholder="https://mfano.com/picha.jpg">
+            </div>
+            <div class="form-group">
+              <label>Ujumbe / Maelezo</label>
+              <textarea id="annBody" rows="3" placeholder="Maelezo kamili ya tangazo..." required></textarea>
+            </div>
+            <button type="submit" class="btn-solid" style="width:100%; justify-content:center; background:#166534; font-size:14px; padding:12px;">📢 Chapisha Tangazo</button>
+          </form>
+        </div>
+
+        <!-- Stats Counters -->
+        <div style="display:flex; gap:10px; margin-bottom:18px;">
+          <div style="flex:1; background:#eff6ff; padding:12px; border-radius:12px; text-align:center;">
+            <div style="font-size:20px; font-weight:bold; color:var(--navy);" id="dashJoinCount">0</div>
+            <div style="font-size:11px; color:var(--muted);">Wanaoomba</div>
+          </div>
+          <div style="flex:1; background:#ecfdf5; padding:12px; border-radius:12px; text-align:center;">
+            <div style="font-size:20px; font-weight:bold; color:#047857;" id="dashDonorCount">0</div>
+            <div style="font-size:11px; color:var(--muted);">Waliotoa</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:14px; color:var(--navy); margin-bottom:10px;">📋 Maombi ya Kujiunga na Kwaya</h3>
+        <div id="dashJoinList" style="margin-bottom:20px;"></div>
+
+        <h3 style="font-size:14px; color:var(--navy); margin-bottom:10px;">🤝 Michango na Ujumbe</h3>
+        <div id="dashDonorList" style="margin-bottom:20px;"></div>
+
+        <button class="btn-primary" onclick="handleLogout()" style="background:#dc2626; box-shadow:none;">🚪 Ondoka (Logout)</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Initial default announcements data
+  const defaultAnnouncements = [
+    {
+      id: "ann_1",
+      title: "University examination",
+      type: "upcoming",
+      date: "Jul 14, 2026",
+      time: "08:00",
+      location: "Location TBD",
+      image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop&q=60",
+      body: "Best wishes to our family on the university examination. May your hard work lead to great success!"
+    }
+  ];
+
+  // SAFE WRAPPER: baadhi ya browsers (mfano Edge inapofungua faili lililopakuliwa
+  // moja kwa moja kutoka WhatsApp) huzuia localStorage na kutupa error. Hii
+  // inahakikisha script haisimami kabisa hata kama localStorage imezuiwa.
+  function safeGet(key, fallback){
+    try{
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){
+      console.warn('localStorage haipatikani, natumia data ya default:', e);
+      return fallback;
+    }
+  }
+  function safeSet(key, value){
+    try{
+      localStorage.setItem(key, JSON.stringify(value));
+    }catch(e){
+      console.warn('Imeshindwa kuhifadhi kwenye localStorage:', e);
+    }
+  }
+
+  // 1. HIFADHI YA KUDUMU (localStorage)
+  let announcementsData = safeGet('st_peter_announcements', defaultAnnouncements);
+  let currentFilter = 'upcoming';
+
+  const joinRequestsData = safeGet('st_peter_joins', [
+    { name: "John Bosco", phone: "0712 345 678", voice: "Tenor", date: "24 Julai 2026" }
+  ]);
+
+  const donorMessagesData = safeGet('st_peter_donors', [
+    { name: "Bernard K.", amount: "TSH 50,000", msg: "Barikiweni sana kwa huduma nzuri.", date: "25 Julai 2026" }
+  ]);
+
+  // FUNCTION YA KUONYESHA MATANGAZO NA FILTER
+  function renderAnnouncements(){
+    const container = document.getElementById('announcementsContainer');
+    if(!container) return;
+
+    let filtered = announcementsData;
+    if(currentFilter === 'upcoming') {
+      filtered = announcementsData.filter(a => a.type === 'upcoming');
+      document.getElementById('eventCategoryTitle').innerHTML = `📅 UPCOMING EVENTS <span style="background:#024596; color:#fff; padding:1px 7px; border-radius:999px; font-size:11px;">${filtered.length}</span>`;
+    } else if(currentFilter === 'past') {
+      filtered = announcementsData.filter(a => a.type === 'past');
+      document.getElementById('eventCategoryTitle').innerHTML = `⏱️ PAST EVENTS <span style="background:#024596; color:#fff; padding:1px 7px; border-radius:999px; font-size:11px;">${filtered.length}</span>`;
+    } else {
+      document.getElementById('eventCategoryTitle').innerHTML = `📋 ALL EVENTS <span style="background:#024596; color:#fff; padding:1px 7px; border-radius:999px; font-size:11px;">${filtered.length}</span>`;
+    }
+
+    if(filtered.length === 0){
+      container.innerHTML = `<div style="text-align:center; padding:30px; color:#64748b;">Hakuna matukio kwenye kipengele hiki kwa sasa.</div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(a => `
+      <div class="event-card">
+        ${a.image ? `
+          <div class="event-img-wrap">
+            <img src="${a.image}" alt="${a.title}">
+            <div class="event-date-badge">📅 ${a.date}</div>
+          </div>
+        ` : ''}
+        <div class="event-body">
+          <div class="event-status ${a.type === 'past' ? 'past' : ''}">
+            ${a.type === 'past' ? '⏱️ Past Event' : '📅 Upcoming'}
+          </div>
+          <h3 class="event-title">${a.title}</h3>
+          <div class="event-meta-row">
+            ${a.time ? `<span>🕒 ${a.time}</span>` : ''}
+            ${a.location ? `<span>📍 ${a.location}</span>` : ''}
+          </div>
+          <p class="event-desc">${a.body}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterEvents(type){
+    currentFilter = type;
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    if(type === 'upcoming') document.getElementById('btnFilterUpcoming').classList.add('active');
+    if(type === 'past') document.getElementById('btnFilterPast').classList.add('active');
+    if(type === 'all') document.getElementById('btnFilterAll').classList.add('active');
+    renderAnnouncements();
+  }
+
+  // ADMIN CHAPISHA TANGAZO
+  function handlePostAnnouncement(e){
+    e.preventDefault();
+    const title = document.getElementById('annTitle').value.trim();
+    const type = document.getElementById('annType').value;
+    const date = document.getElementById('annDate').value.trim();
+    const time = document.getElementById('annTime').value.trim();
+    const location = document.getElementById('annLocation').value.trim();
+    const image = document.getElementById('annImage').value.trim() || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&auto=format&fit=crop&q=60';
+    const body = document.getElementById('annBody').value.trim();
+
+    const newAnn = {
+      id: "ann_" + Date.now(),
+      title,
+      type,
+      date,
+      time,
+      location,
+      image,
+      body
+    };
+
+    announcementsData.unshift(newAnn);
+
+    // HIFADHI BROWSER
+    safeSet('st_peter_announcements', announcementsData);
+
+    // SAFISHA
+    document.getElementById('annTitle').value = '';
+    document.getElementById('annDate').value = '';
+    document.getElementById('annTime').value = '';
+    document.getElementById('annLocation').value = '';
+    document.getElementById('annImage').value = '';
+    document.getElementById('annBody').value = '';
+
+    renderAnnouncements();
+    alert('📢 Tangazo/Tukio limeshapishwa kikamilifu! Sasa litaonekana moja kwa moja kwenye tovuti.');
+    return false;
+  }
+
+  function showPage(id){
+    document.querySelectorAll('#page-front, #page-about, #page-events, #page-music').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.getElementById('mainHeader').style.display = 'flex';
+    document.getElementById('page-login').classList.remove('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function openDrawer(){
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlayBackdrop');
+    if (drawer && overlay) {
+      drawer.classList.add('open');
+      overlay.style.display = 'block';
+    }
+  }
+
+  function closeDrawer(){
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlayBackdrop');
+    if (drawer && overlay) {
+      drawer.classList.remove('open');
+      overlay.style.display = 'none';
+    }
+  }
+
+  function goTo(pageId){
+    closeDrawer();
+    showPage(pageId);
+  }
+
+  function goToLogin(){
+    closeDrawer();
+    document.getElementById('page-login').classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function closeLogin(){
+    document.getElementById('page-login').classList.remove('active');
+  }
+
+  function openJoinModal(){
+    closeDrawer();
+    document.getElementById('joinModal').style.display = 'flex';
+  }
+
+  function closeJoinModal(e){
+    document.getElementById('joinModal').style.display = 'none';
+  }
+
+  function handleJoinSubmit(e){
+    e.preventDefault();
+    const name = document.getElementById('joinName').value.trim();
+    const phone = document.getElementById('joinPhone').value.trim();
+    const voice = document.getElementById('joinVoice').value;
+
+    joinRequestsData.unshift({ name, phone, voice, date: "Leo" });
+    safeSet('st_peter_joins', joinRequestsData);
+
+    document.getElementById('joinName').value = '';
+    document.getElementById('joinPhone').value = '';
+    document.getElementById('joinVoice').value = '';
+    closeJoinModal();
+
+    alert('Hongera! Maombi yako ya kujiunga na kwaya yametumwa kikamilifu.');
+    return false;
+  }
+
+  function openSupport(){
+    closeDrawer();
+    document.getElementById('supportBackdrop').style.display = 'flex';
+  }
+
+  function closeSupport(e){
+    document.getElementById('supportBackdrop').style.display = 'none';
+  }
+
+  function handleSupportSubmit(e){
+    e.preventDefault();
+    const name = document.getElementById('donorName').value.trim();
+    const amount = document.getElementById('donorAmount').value.trim();
+    const msg = document.getElementById('donorMsg').value.trim();
+
+    donorMessagesData.unshift({
+      name,
+      amount: amount.includes('TSH') ? amount : 'TSH ' + amount,
+      msg,
+      date: "Leo"
+    });
+    safeSet('st_peter_donors', donorMessagesData);
+
+    document.getElementById('donorName').value = '';
+    document.getElementById('donorAmount').value = '';
+    document.getElementById('donorMsg').value = '';
+    closeSupport();
+
+    alert('Tunamshukuru Mungu kwa mchango wako! Ujumbe wako umepokelewa na Uongozi wa Kwaya.');
+    return false;
+  }
+
+  function copyAccount(){
+    const num = document.getElementById('acctNumber').textContent.replace(/\s/g, '');
+    navigator.clipboard.writeText(num).then(() => {
+      alert('Nambari ya akaunti imenakiliwa: ' + num);
+    }).catch(() => {
+      alert('Nambari ya Akaunti ni: ' + num);
+    });
+  }
+
+  const songsData = [
+    {
+      id:'kuna-nini-bethlehemu',
+      title:'Kuna Nini Leo Bethlehemu',
+      composer:'Kwaya ya Watakatifu Petro na Paulo',
+      category:'Krismasi',
+      duration:'5:40',
+      youtube:'https://youtu.be/T3SM8hJLZ78?si=Mk2iHCee2OKJt9KB',
+      pdf:'songs/kuna-nini-leo-bethlehemu.pdf',
+      info:'Wimbo mpya wa kwaya yetu unaosimulia furaha ya kuzaliwa kwa Bwana wetu Yesu Kristo huko Bethlehemu.'
+    },
+    {
+      id:'thamani-ya-mwanadamu',
+      title:'Thamani ya Mwanadamu',
+      composer:'Kwaya ya Watakatifu Petro na Paulo',
+      category:'Worship',
+      duration:'5:05',
+      youtube:'https://youtu.be/DsB9js99yuQ?si=UAoijEp95cN2lOnu',
+      pdf:'songs/thamani-ya-mwanadamu.pdf',
+      info:'Wimbo unaosisitiza thamani kubwa ya kila mwanadamu machoni pa Mungu.'
+    },
+    {
+      id:'bwana-yu-karibu',
+      title:'Bwana Yu Karibu',
+      composer:'Kwaya ya Watakatifu Petro na Paulo',
+      category:'Praise',
+      duration:'4:55',
+      youtube:'https://youtu.be/aGH3O2Exc98?si=pwqk3omFLiOTEcVV',
+      pdf:'songs/bwana-yu-karibu.pdf',
+      info:'Wimbo wa faraja unaotukumbusha kuwa Bwana yupo karibu nasi kila wakati.'
+    }
+  ];
+
+  function renderSongs(){
+    const searchEl = document.getElementById('songSearch');
+    const genreEl = document.getElementById('genreSelect');
+    if(!searchEl || !genreEl) return;
+    const query = searchEl.value.trim().toLowerCase();
+    const genre = genreEl.value;
+    const container = document.getElementById('songsContainer');
+
+    const filtered = songsData.filter(s => {
+      const matchQuery = !query || s.title.toLowerCase().includes(query) || s.composer.toLowerCase().includes(query);
+      const matchGenre = genre === 'All' || s.category === genre;
+      return matchQuery && matchGenre;
+    });
+
+    document.getElementById('songCount').textContent = filtered.length;
+
+    container.innerHTML = filtered.map(s => `
+      <div class="song-card2">
+        <div class="song-header-bar">
+          <div class="song-icon-circle">🎵</div>
+          <div class="song-tag-pill">${s.category}</div>
+          <div class="song-duration">🕐 ${s.duration}</div>
+        </div>
+        <div class="song-body">
+          <div class="song-title">${s.title}</div>
+          <div class="song-composer">👤 ${s.composer}</div>
+          <div class="song-buttons">
+            ${s.youtube
+              ? `<button class="sbtn watch" onclick="window.open('${s.youtube}','_blank')">▶ Watch</button>`
+              : `<button class="sbtn watch" style="opacity:.5;" disabled>▶ Watch</button>`}
+            <a class="sbtn sheet" href="${s.pdf}" download>⬇ Music sheet</a>
+          </div>
+          <button class="sbtn info" onclick="toggleInfo('${s.id}')">ⓘ Song Info</button>
+          <div class="info-panel" id="info-${s.id}" style="display:none;">${s.info}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function toggleInfo(id){
+    const panel = document.getElementById('info-' + id);
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function togglePassword(){
+    const pw = document.getElementById('password');
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+  }
+
+  const VALID_EMAIL = "st.peter@gmail.com";
+  const VALID_PASSWORD = "st.peter@gmail.com";
+
+  function handleLogin(e){
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errorBox = document.getElementById('errorMsg');
+    const btn = document.getElementById('loginBtn');
+    
+    btn.disabled = true; btn.textContent = "Inaingia...";
+    setTimeout(() => {
+      if(email === VALID_EMAIL && password === VALID_PASSWORD){
+        errorBox.style.display = "none";
+        document.getElementById('adminLoginForm').style.display = "none";
+        document.getElementById('adminDashboardPanel').style.display = "block";
+        renderAdminDashboard();
+      } else {
+        errorBox.style.display = "block";
+      }
+      btn.disabled = false; btn.innerHTML = "➜ Ingia Admin";
+    }, 400);
+    return false;
+  }
+
+  function renderAdminDashboard(){
+    document.getElementById('dashJoinCount').textContent = joinRequestsData.length;
+    document.getElementById('dashDonorCount').textContent = donorMessagesData.length;
+
+    document.getElementById('dashJoinList').innerHTML = joinRequestsData.map(j => `
+      <div class="dash-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:13.5px; color:var(--ink);">${j.name}</strong>
+          <span class="dash-badge">${j.voice}</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">📞 Simu: <b>${j.phone}</b></div>
+      </div>
+    `).join('');
+
+    document.getElementById('dashDonorList').innerHTML = donorMessagesData.map(d => `
+      <div class="dash-card">
+        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:13.5px;">
+          <span>${d.name}</span>
+          <span style="color:#047857;">${d.amount}</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">"${d.msg}"</div>
+      </div>
+    `).join('');
+  }
+
+  function handleLogout(){
+    document.getElementById('adminDashboardPanel').style.display = "none";
+    document.getElementById('adminLoginForm').style.display = "block";
+    document.getElementById('email').value = "";
+    document.getElementById('password').value = "";
+  }
+
+  // Bind Event Listeners on DOM load to guarantee functionality across all browsers
+  document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('hamburgerBtn');
+    if (btn) {
+      btn.addEventListener('click', openDrawer);
+    }
+    renderAnnouncements();
+    renderSongs();
+  });
+</script>
+</body>
+</html>
