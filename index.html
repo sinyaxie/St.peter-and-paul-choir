@@ -1744,49 +1744,27 @@ a{
    FIREBASE
 ========================================================= */
 
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  onSnapshot,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
-
-
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBAMa7bhUMI6_KIKF_-5P_kHrb640EHrw",
+  apiKey: "AIzaSyBAMa7bhVMU6_IKIFK_-5P_kHrb640EHrw",
   authDomain: "st-peter-and-paul-ifm-choir.firebaseapp.com",
   projectId: "st-peter-and-paul-ifm-choir",
   storageBucket: "st-peter-and-paul-ifm-choir.firebasestorage.app",
   messagingSenderId: "27914491029",
-  appId: "1:27914491029:web:3c806ac7cb3da09f5c779c",
-  measurementId: "G-TSWJ71N6BS"
+  appId: "1:27914491029:web:3603253d7ad3503b5c779c",
+  measurementId: "G-K9R8Z8FY6S"
 };
 
-
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-
-/*
-  IMPORTANT:
-  This email must match the admin account
-  created inside Firebase Authentication.
-*/
-
-const ADMIN_EMAIL = "st.peter@gmail.com";
+const analytics = getAnalytics(app);
 
 
 /* =========================================================
@@ -2887,49 +2865,35 @@ async function handleLogin(event){
 
   }catch(error){
 
-    console.error(error);
+    console.error("LOGIN ERROR:", error.code, error.message);
 
-    let message =
-      "Login failed. Check email and password.";
-
+    let message = "Login imeshindikana: " + (error.code || error.message);
 
     if(error.code === "auth/invalid-credential"){
-      message =
-        "Email au password si sahihi.";
+      message = "Email au password si sahihi (au user hajaundwa).";
     }
-
-    else if(error.code === "auth/user-not-found"){
-      message =
-        "Admin account haipo.";
+    else if(error.code === "auth/operation-not-allowed"){
+      message = "Email/Password haijawashwa kwenye Firebase.";
     }
-
-    else if(error.code === "auth/wrong-password"){
-      message =
-        "Password si sahihi.";
+    else if(error.code === "auth/unauthorized-domain"){
+      message = "Domain hii haijaruhusiwa kwenye Authorized domains.";
     }
-
+    else if(error.code === "auth/invalid-api-key" || error.code === "auth/api-key-not-valid.-please-pass-a-valid-api-key."){
+      message = "API key si sahihi. Copy firebaseConfig upya.";
+    }
+    else if(error.code === "auth/network-request-failed"){
+      message = "Tatizo la mtandao. Jaribu tena.";
+    }
     else if(error.code === "auth/too-many-requests"){
-      message =
-        "Majaribio yamekuwa mengi. Jaribu baadaye.";
+      message = "Majaribio yamekuwa mengi. Subiri kidogo.";
+    }
+    else if(error.message && error.message.includes("not the choir admin")){
+      message = "Account hii haina ruhusa ya admin.";
     }
 
-    else if(error.message.includes("not the choir admin")){
-      message =
-        "Account hii haina ruhusa ya admin.";
-    }
+    showToast(message, "error");
 
-
-    showToast(
-      message,
-      "error"
-    );
-
-  }finally{
-
-    button.disabled = false;
-    button.textContent = "Login";
-
-  }
+  }finally
 
 }
 
