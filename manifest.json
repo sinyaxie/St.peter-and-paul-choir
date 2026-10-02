@@ -1,0 +1,25 @@
+{
+  "name": "St. Peter & Paul IFM Choir",
+  "short_name": "IFM Choir",
+  "description": "St. Peter & Paul IFM Choir - Institute of Finance Management",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#071b45",
+  "theme_color": "#071b45",
+  "icons": [
+    {
+      "src": "image4.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "image4.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
