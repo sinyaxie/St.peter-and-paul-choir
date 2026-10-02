@@ -8,6 +8,12 @@
 <meta name="description" content="St. Peter & Paul IFM Choir - Institute of Finance Management">
 <meta name="theme-color" content="#071b45">
 
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="image4.jpg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="IFM Choir">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
@@ -824,6 +830,7 @@ a{color:inherit;text-decoration:none}
       <button class="nav-item" onclick="goTo('page-events')">📅 Events & Announcements</button>
       <button class="nav-item" onclick="goTo('page-music')">🎵 Music</button>
       <button class="nav-item" onclick="enableNotifications()">🔔 Washa Arifa</button>
+      <button id="installBtn" class="nav-item" style="display:none" onclick="installApp()">📲 Weka App kwenye Simu</button>
       <button class="nav-item" onclick="openJoinModal();closeDrawer()">🎤 Join Choir</button>
       <button class="nav-item" onclick="openSupport();closeDrawer()">❤️ Support Choir</button>
       <button class="nav-item gold" onclick="goToLogin()">🔐 Admin</button>
@@ -2348,6 +2355,64 @@ startAnnouncementListener();
 renderSongs();
 
 
+/* =========================================================
+   PWA: INSTALL APP + SERVICE WORKER
+========================================================= */
+
+let deferredInstallPrompt = null;
+
+window.addEventListener("beforeinstallprompt", event => {
+
+  event.preventDefault();
+
+  deferredInstallPrompt = event;
+
+  document.getElementById("installBtn").style.display = "block";
+
+});
+
+window.addEventListener("appinstalled", () => {
+
+  deferredInstallPrompt = null;
+
+  document.getElementById("installBtn").style.display = "none";
+
+  showToast("App imewekwa kwenye simu yako.","success");
+
+});
+
+async function installApp(){
+
+  closeDrawer();
+
+  if(!deferredInstallPrompt){
+
+    showToast("Bonyeza dots tatu za Chrome, kisha 'Add to Home screen'.","success");
+    return;
+
+  }
+
+  deferredInstallPrompt.prompt();
+
+  await deferredInstallPrompt.userChoice;
+
+  deferredInstallPrompt = null;
+
+  document.getElementById("installBtn").style.display = "none";
+
+}
+
+if("serviceWorker" in navigator){
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(error => {
+      console.error("SW ERROR:",error);
+    });
+  });
+
+}
+
+
 /*
   Inline onclick handlers kwenye HTML zinahitaji
   functions hizi ziwe global.
@@ -2384,7 +2449,8 @@ Object.assign(window,{
 
   handleImagePick,
   deleteAnnouncement,
-  enableNotifications
+  enableNotifications,
+  installApp
 
 });
 
