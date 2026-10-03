@@ -374,6 +374,40 @@ a{color:inherit;text-decoration:none}
   border:1px dashed #ccd1da;border-radius:14px;
 }
 
+/* SOCIAL MEDIA */
+.social-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+}
+.social-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;padding:22px 12px;border-radius:18px;color:#fff;
+  font-weight:700;text-align:center;transition:.2s;
+  box-shadow:var(--shadow);
+}
+.social-btn:hover{transform:translateY(-3px)}
+.social-btn .s-icon{font-size:30px;line-height:1}
+.social-btn small{font-weight:500;opacity:.9;font-size:12px}
+.social-youtube{background:linear-gradient(135deg,#ff0000,#b30000)}
+.social-instagram{background:linear-gradient(135deg,#f09433,#dc2743 50%,#bc1888)}
+.social-tiktok{background:linear-gradient(135deg,#25f4ee22,#000 40%,#111);border:1px solid #333}
+.drawer-social{
+  margin-top:22px;padding-top:18px;border-top:1px solid var(--border);
+}
+.drawer-social p{
+  font-size:12px;font-weight:800;color:var(--muted);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;
+}
+.drawer-social .row{display:flex;gap:8px}
+.drawer-social a{
+  flex:1;text-align:center;padding:11px 6px;border-radius:12px;
+  color:#fff;font-weight:700;font-size:13px;
+}
+@media(max-width:650px){
+  .social-grid{grid-template-columns:1fr}
+  .social-btn{flex-direction:row;justify-content:flex-start;padding:16px 20px;text-align:left}
+  .social-btn .s-icon{font-size:26px}
+}
+
 /* IMAGE PICKER + ADMIN ANNOUNCEMENT LIST */
 .img-preview{
   display:none;width:100%;max-height:200px;object-fit:cover;
@@ -556,6 +590,42 @@ a{color:inherit;text-decoration:none}
         <div class="cross">✝</div>
         <p>“Mwimbieni Bwana wimbo mpya; kwa maana ametenda mambo ya ajabu.”</p>
         <span>Zaburi 98:1</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-inner">
+
+        <div class="section-title">
+          <small>Social Media</small>
+          <h2>Tufuatilie Mtandaoni</h2>
+        </div>
+
+        <div class="social-grid">
+
+          <a class="social-btn social-youtube"
+             href="https://youtube.com/@stspeterandpaulifm"
+             target="_blank" rel="noopener noreferrer">
+            <span class="s-icon">▶️</span>
+            <span>YouTube<br><small>Tazama nyimbo zetu</small></span>
+          </a>
+
+          <a class="social-btn social-instagram"
+             href="https://www.instagram.com/sts_peter_and_paul_choir_ifm"
+             target="_blank" rel="noopener noreferrer">
+            <span class="s-icon">📸</span>
+            <span>Instagram<br><small>Picha na matukio</small></span>
+          </a>
+
+          <a class="social-btn social-tiktok"
+             href="https://www.tiktok.com/@st..peter.and.pau5"
+             target="_blank" rel="noopener noreferrer">
+            <span class="s-icon">🎵</span>
+            <span>TikTok<br><small>Video fupi za kwaya</small></span>
+          </a>
+
+        </div>
+
       </div>
     </section>
 
@@ -836,6 +906,15 @@ a{color:inherit;text-decoration:none}
       <button class="nav-item gold" onclick="goToLogin()">🔐 Admin</button>
     </div>
 
+    <div class="drawer-social">
+      <p>Tufuatilie</p>
+      <div class="row">
+        <a style="background:#e00" href="https://youtube.com/@stspeterandpaulifm" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a style="background:#dc2743" href="https://www.instagram.com/sts_peter_and_paul_choir_ifm" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a style="background:#111" href="https://www.tiktok.com/@st..peter.and.pau5" target="_blank" rel="noopener noreferrer">TikTok</a>
+      </div>
+    </div>
+
   </aside>
 </div>
 
@@ -891,8 +970,8 @@ a{color:inherit;text-decoration:none}
     </div>
 
     <div class="card" style="box-shadow:none;margin-bottom:18px;background:#f8f5ec">
-      <p style="font-size:13px;color:#777">LIPA KWA M-PESA</p>
-      <h2 style="color:var(--blue);margin:5px 0">352348594</h2>
+      <p style="font-size:13px;color:#777">NBC Account</p>
+      <h2 style="color:var(--blue);margin:5px 0">0751 6600 0088</h2>
       <p>Account Name: <strong>St. Peter & Paul IFM Choir</strong></p>
       <button class="small-btn" style="margin-top:12px" onclick="copyAccount()">Copy Account Number</button>
     </div>
@@ -2231,7 +2310,7 @@ const songs = [
     title:"Thamani ya Mwanadamu",
     category:"Worship",
     duration:"5:05",
-    youtube:"https://youtu.be/aGH3O2Exc98?si=pwqk3omFLiOTEcVV",
+    youtube:"https://youtu.be/DsB9js99yuQ?si=UAoijEp95cN2lOnu",
     pdf:"songs/thamani-ya-mwanadamu.pdf"
   },
 
@@ -2239,7 +2318,7 @@ const songs = [
     title:"Bwana Yu Karibu",
     category:"Praise",
     duration:"4:55",
-    youtube:"https://youtu.be/DsB9js99yuQ?si=UAoijEp95cN2lOnu",
+    youtube:"https://youtu.be/aGH3O2Exc98?si=pwqk3omFLiOTEcVV",
     pdf:"songs/bwana-yu-karibu.pdf"
   }
 
