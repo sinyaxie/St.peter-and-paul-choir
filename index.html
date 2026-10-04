@@ -374,6 +374,13 @@ a{color:inherit;text-decoration:none}
   border:1px dashed #ccd1da;border-radius:14px;
 }
 
+/* TANGAZO LILILOFUNGULIWA KUTOKA NOTIFICATION */
+.event-card.highlight{
+  outline:3px solid var(--gold);
+  box-shadow:0 0 0 8px rgba(214,168,61,.25),var(--shadow);
+  transition:.3s;
+}
+
 /* CONTACT BUTTONS (admin) */
 .contact-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .contact-btn{
@@ -1535,7 +1542,7 @@ function renderAnnouncements(){
 
     return `
 
-      <article class="event-card">
+      <article class="event-card" id="ann-${escapeHtml(item.id)}">
 
         <div class="event-image">
           <img
@@ -1570,6 +1577,63 @@ function renderAnnouncements(){
   }).join("");
 
   updateAnnouncementCount();
+
+  tryScrollToPending();
+
+}
+
+
+/* =========================================================
+   FUNGUA TANGAZO MOJA KWA MOJA (kutoka kwenye notification)
+========================================================= */
+
+let pendingOpenId = null;
+
+function tryScrollToPending(){
+
+  if(!pendingOpenId){
+    return;
+  }
+
+  const card = document.getElementById("ann-" + pendingOpenId);
+
+  if(!card){
+    return;
+  }
+
+  pendingOpenId = null;
+
+  setTimeout(() => {
+
+    card.scrollIntoView({ behavior:"smooth", block:"center" });
+
+    card.classList.add("highlight");
+
+    setTimeout(() => card.classList.remove("highlight"),4000);
+
+  },400);
+
+}
+
+
+function openAnnouncement(id){
+
+  pendingOpenId = id;
+
+  currentFilter = "all";
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.classList.toggle("active",btn.dataset.filter === "all");
+  });
+
+  showPage("page-events");
+
+  renderAnnouncements();
+
+  /* Ondoa ?ann=... kwenye anwani ili isirudie ukirefresh */
+  try{
+    history.replaceState(null,"",location.pathname);
+  }catch(error){}
 
 }
 
@@ -2281,7 +2345,9 @@ async function showLocalNotification(item){
   const options = {
     body:item.body ? String(item.body).slice(0,120) : "Kuna tangazo jipya kutoka St. Peter & Paul Choir",
     icon:"image4.jpg",
-    badge:"image4.jpg"
+    badge:"image4.jpg",
+    tag:item.id,
+    data:{ id:item.id }
   };
 
   try{
@@ -2561,6 +2627,26 @@ async function installApp(){
   deferredInstallPrompt = null;
 
   document.getElementById("installBtn").style.display = "none";
+
+}
+
+/* Fungua tangazo kama anwani ina ?ann=ID (notification ilifungua app) */
+const linkedAnnouncementId = new URLSearchParams(location.search).get("ann");
+
+if(linkedAnnouncementId){
+  openAnnouncement(linkedAnnouncementId);
+}
+
+/* Fungua tangazo notification ikibonyezwa app ikiwa tayari wazi */
+if("serviceWorker" in navigator){
+
+  navigator.serviceWorker.addEventListener("message", event => {
+
+    if(event.data && event.data.type === "open-announcement"){
+      openAnnouncement(event.data.id);
+    }
+
+  });
 
 }
 
