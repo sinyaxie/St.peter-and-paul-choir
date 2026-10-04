@@ -1,6 +1,6 @@
 /* Service worker: arifa + kufanya app ifunguke hata mtandao ukiwa dhaifu */
 
-const CACHE = "ifm-choir-v1";
+const CACHE = "ifm-choir-v2";
 
 const SHELL = [
   "./",
@@ -61,17 +61,36 @@ self.addEventListener("notificationclick", event => {
 
   event.notification.close();
 
+  const data = event.notification.data || {};
+  const id = data.id || "";
+
+  /* Link ya moja kwa moja kwenye tangazo husika */
+  const target = new URL(
+    id ? "./?ann=" + encodeURIComponent(id) : "./",
+    self.registration.scope
+  ).href;
+
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(list => {
 
+      /* App ikiwa wazi: ilete mbele na uiambie ifungue tangazo */
       for(const client of list){
+
         if("focus" in client){
+
+          if(id){
+            client.postMessage({ type: "open-announcement", id: id });
+          }
+
           return client.focus();
+
         }
+
       }
 
+      /* App imefungwa: ifungue moja kwa moja kwenye tangazo */
       if(self.clients.openWindow){
-        return self.clients.openWindow("./");
+        return self.clients.openWindow(target);
       }
 
     })
