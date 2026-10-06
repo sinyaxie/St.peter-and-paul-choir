@@ -374,6 +374,30 @@ a{color:inherit;text-decoration:none}
   border:1px dashed #ccd1da;border-radius:14px;
 }
 
+/* MEMBERS */
+.members-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.voice-card{
+  background:#fff;border:1px solid var(--border);
+  border-radius:18px;padding:20px;box-shadow:var(--shadow);
+}
+.voice-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.voice-head h3{color:var(--blue);font-family:"Playfair Display",serif;font-size:22px}
+.voice-count{
+  background:var(--gold);color:#13203a;font-weight:800;
+  min-width:34px;height:34px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;padding:0 10px;
+}
+.voice-list{padding-left:22px;color:#384152;line-height:1.9}
+.member-group{margin-bottom:14px}
+.member-group>strong{display:block;color:var(--blue);margin-bottom:6px}
+.member-group .admin-ann{margin-bottom:6px}
+@media(max-width:650px){
+  .members-grid{grid-template-columns:1fr}
+}
+
 /* LIKE BUTTON */
 .like-btn{
   margin-top:14px;
@@ -410,6 +434,8 @@ a{color:inherit;text-decoration:none}
   color:var(--blue);font-weight:700;font-size:12.5px;
 }
 .contact-btn.wa{background:#25d366;color:#fff}
+.contact-btn.ok{background:#e6f6ec;color:var(--success)}
+.contact-btn{border:0;cursor:pointer}
 
 /* SOCIAL MEDIA */
 .social-grid{
@@ -771,6 +797,23 @@ a{color:inherit;text-decoration:none}
     </div>
   </section>
 
+  <!-- MEMBERS -->
+  <section id="page-members" class="page">
+    <div class="inner-page">
+
+      <div class="page-heading">
+        <small>Our Family</small>
+        <h2>Wanakwaya</h2>
+        <p>Jumla ya wanakwaya: <strong id="membersTotal">0</strong></p>
+      </div>
+
+      <div id="membersGroups" class="members-grid">
+        <div class="empty">Loading...</div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- ADMIN LOGIN -->
   <section id="page-login" class="page">
     <div class="login-page">
@@ -882,6 +925,12 @@ a{color:inherit;text-decoration:none}
           <!-- JOIN REQUESTS -->
           <div class="card">
             <h3>Join Requests</h3>
+
+            <div class="filters" style="margin:12px 0">
+              <button id="joinTabNew" class="filter-btn active" onclick="setJoinTab('new')">Mpya (0)</button>
+              <button id="joinTabRegistered" class="filter-btn" onclick="setJoinTab('registered')">Wamesajiliwa (0)</button>
+            </div>
+
             <div id="joinList" class="data-list">
               <div class="empty">No join requests yet.</div>
             </div>
@@ -890,8 +939,44 @@ a{color:inherit;text-decoration:none}
           <!-- SUPPORT -->
           <div class="card">
             <h3>Support Messages</h3>
+
+            <div class="filters" style="margin:12px 0">
+              <button id="donorTabNew" class="filter-btn active" onclick="setDonorTab('new')">Mpya (0)</button>
+              <button id="donorTabThanked" class="filter-btn" onclick="setDonorTab('thanked')">Wameshukuriwa (0)</button>
+            </div>
+
             <div id="donorList" class="data-list">
               <div class="empty">No support messages yet.</div>
+            </div>
+          </div>
+
+          <!-- MANAGE MEMBERS -->
+          <div class="card">
+            <h3>Manage Members</h3>
+
+            <form onsubmit="handleAddMember(event)" style="margin:12px 0 16px">
+
+              <div class="form-group">
+                <label>Jina la Mwanakwaya</label>
+                <input id="memberName" class="input" required placeholder="Jina kamili">
+              </div>
+
+              <div class="form-group">
+                <label>Sauti</label>
+                <select id="memberVoice" class="select">
+                  <option>Soprano</option>
+                  <option>Alto</option>
+                  <option>Tenor</option>
+                  <option>Bass</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary" style="width:100%" type="submit">➕ Ongeza Mwanakwaya</button>
+
+            </form>
+
+            <div id="adminMembersList" class="data-list">
+              <div class="empty">Hakuna wanakwaya bado.</div>
             </div>
           </div>
 
@@ -936,6 +1021,7 @@ a{color:inherit;text-decoration:none}
       <button class="nav-item" onclick="goTo('page-about')">ℹ️ About Choir</button>
       <button class="nav-item" onclick="goTo('page-events')">📅 Events & Announcements</button>
       <button class="nav-item" onclick="goTo('page-music')">🎵 Music</button>
+      <button class="nav-item" onclick="goTo('page-members')">👥 Wanakwaya</button>
       <button class="nav-item" onclick="enableNotifications()">🔔 Washa Arifa</button>
       <button id="installBtn" class="nav-item" style="display:none" onclick="installApp()">📲 Weka App kwenye Simu</button>
       <button class="nav-item" onclick="openJoinModal();closeDrawer()">🎤 Join Choir</button>
@@ -1078,6 +1164,7 @@ import {
   collection,
   addDoc,
   deleteDoc,
+  setDoc,
   updateDoc,
   increment,
   doc,
@@ -1141,6 +1228,13 @@ let unsubscribeJoins = null;
 let unsubscribeDonors = null;
 
 let pendingAnnouncementImage = "";
+
+let joinTab = "new";
+
+let donorTab = "new";
+
+let membersData = [];
+let unsubscribeMembers = null;
 
 
 /* =========================================================
@@ -2005,6 +2099,365 @@ function contactButtons(phone,text){
 }
 
 
+/* =========================================================
+   WANAKWAYA (MEMBERS)
+========================================================= */
+
+const VOICES = ["Soprano","Alto","Tenor","Bass","Not sure"];
+
+
+function voiceLabel(voice){
+
+  return voice === "Not sure" ? "Sauti haijajulikana" : voice;
+
+}
+
+
+function startMembersListener(){
+
+  if(unsubscribeMembers){
+    unsubscribeMembers();
+  }
+
+  unsubscribeMembers = onSnapshot(
+    collection(db,"members"),
+
+    snapshot => {
+
+      membersData = snapshot.docs.map(d => ({
+        id:d.id,
+        ...d.data()
+      }));
+
+      renderMembers();
+
+    },
+
+    error => {
+
+      console.error("Members listener error:",error.code,error.message);
+
+      const box = document.getElementById("membersGroups");
+
+      if(box){
+        box.innerHTML =
+          '<div class="empty">Orodha ya wanakwaya haijapatikana kwa sasa.</div>';
+      }
+
+    }
+  );
+
+}
+
+
+function groupMembers(){
+
+  const groups = {};
+
+  VOICES.forEach(v => { groups[v] = []; });
+
+  membersData.forEach(m => {
+
+    const voice = VOICES.includes(m.voice) ? m.voice : "Not sure";
+
+    groups[voice].push(m);
+
+  });
+
+  VOICES.forEach(v => {
+    groups[v].sort((a,b) =>
+      String(a.name || "").localeCompare(String(b.name || ""))
+    );
+  });
+
+  return groups;
+
+}
+
+
+function renderMembers(){
+
+  const groups = groupMembers();
+
+  const total = document.getElementById("membersTotal");
+
+  if(total){
+    total.textContent = membersData.length;
+  }
+
+  const shown = VOICES.filter(v => v !== "Not sure" || groups[v].length > 0);
+
+  const publicBox = document.getElementById("membersGroups");
+
+  if(publicBox){
+
+    publicBox.innerHTML = shown.map(v => `
+
+      <div class="voice-card">
+
+        <div class="voice-head">
+          <h3>${escapeHtml(voiceLabel(v))}</h3>
+          <span class="voice-count">${groups[v].length}</span>
+        </div>
+
+        ${
+          groups[v].length
+            ? `<ol class="voice-list">${
+                groups[v].map(m => `<li>${escapeHtml(m.name)}</li>`).join("")
+              }</ol>`
+            : `<div class="empty">Hakuna bado.</div>`
+        }
+
+      </div>
+
+    `).join("");
+
+  }
+
+  const adminBox = document.getElementById("adminMembersList");
+
+  if(adminBox){
+
+    if(membersData.length === 0){
+
+      adminBox.innerHTML = `<div class="empty">Hakuna wanakwaya bado.</div>`;
+
+    }else{
+
+      adminBox.innerHTML = shown
+        .filter(v => groups[v].length > 0)
+        .map(v => `
+
+          <div class="member-group">
+
+            <strong>${escapeHtml(voiceLabel(v))} (${groups[v].length})</strong>
+
+            ${groups[v].map(m => `
+
+              <div class="admin-ann">
+                <span>${escapeHtml(m.name)}</span>
+                <button class="del-btn" onclick="removeMember('${escapeHtml(m.id)}')">🗑️ Toa</button>
+              </div>
+
+            `).join("")}
+
+          </div>
+
+        `).join("");
+
+    }
+
+  }
+
+}
+
+
+async function handleAddMember(event){
+
+  event.preventDefault();
+
+  const user = auth.currentUser;
+
+  if(!user || user.email !== ADMIN_EMAIL){
+
+    showToast("Admin login required.","error");
+    return;
+
+  }
+
+  const nameInput = document.getElementById("memberName");
+  const voice = document.getElementById("memberVoice").value;
+  const name = nameInput.value.trim();
+
+  if(!name){
+
+    showToast("Andika jina la mwanakwaya.","error");
+    return;
+
+  }
+
+  try{
+
+    await addDoc(
+      collection(db,"members"),
+      {
+        name:name,
+        voice:voice,
+        createdAt:serverTimestamp()
+      }
+    );
+
+    nameInput.value = "";
+
+    showToast(name + " ameongezwa kwenye " + voice + ".","success");
+
+  }catch(error){
+
+    console.error("ADD MEMBER ERROR:",error.code,error.message);
+
+    let msg = "Imeshindikana kuongeza mwanakwaya.";
+
+    if(error.code === "permission-denied"){
+      msg = "Ruhusa imekataliwa. Weka Firestore Rules mpya za members.";
+    }
+
+    showToast(msg,"error");
+
+  }
+
+}
+
+
+async function removeMember(id){
+
+  const user = auth.currentUser;
+
+  if(!user || user.email !== ADMIN_EMAIL){
+
+    showToast("Admin login required.","error");
+    return;
+
+  }
+
+  const member = membersData.find(m => m.id === id);
+
+  const ok = confirm(
+    'Mtoe "' + ((member && member.name) || "") + '" kwenye orodha ya wanakwaya?'
+  );
+
+  if(!ok){
+    return;
+  }
+
+  try{
+
+    await deleteDoc(doc(db,"members",id));
+
+    showToast("Ametolewa kwenye orodha.","success");
+
+  }catch(error){
+
+    console.error("REMOVE MEMBER ERROR:",error.code,error.message);
+
+    showToast("Imeshindikana kumtoa.","error");
+
+  }
+
+}
+
+
+function setJoinTab(tab){
+
+  joinTab = tab;
+
+  renderJoinRequests();
+
+}
+
+
+async function setJoinStatus(id,status){
+
+  const user = auth.currentUser;
+
+  if(!user || user.email !== ADMIN_EMAIL){
+
+    showToast("Admin login required.","error");
+    return;
+
+  }
+
+  try{
+
+    const request = joinRequestsData.find(j => j.id === id);
+
+    await updateDoc(doc(db,"joinRequests",id),{ status:status });
+
+    try{
+
+      if(status === "registered" && request){
+
+        /* Tumia id ya ombi kama id ya mwanakwaya ili asiongezwe mara mbili */
+        await setDoc(doc(db,"members",id),{
+          name:request.name || "",
+          voice:request.voice || "Not sure",
+          createdAt:serverTimestamp()
+        });
+
+        showToast(
+          (request.name || "Mwanakwaya") + " ameongezwa kwenye " +
+          voiceLabel(request.voice || "Not sure") + ".",
+          "success"
+        );
+
+      }else{
+
+        /* Akirudishwa kwenye Mpya, mtoe kwenye orodha ya wanakwaya */
+        await deleteDoc(doc(db,"members",id));
+
+        showToast("Amerudishwa kwenye Mpya.","success");
+
+      }
+
+    }catch(memberError){
+
+      console.error("MEMBER SYNC ERROR:",memberError.code,memberError.message);
+
+      showToast(
+        "Hali imebadilika, lakini orodha ya wanakwaya haijasasishwa. Angalia Firestore Rules.",
+        "error"
+      );
+
+    }
+
+  }catch(error){
+
+    console.error("JOIN STATUS ERROR:",error.code,error.message);
+
+    showToast("Imeshindikana kubadilisha hali.","error");
+
+  }
+
+}
+
+
+async function deleteJoinRequest(id){
+
+  const user = auth.currentUser;
+
+  if(!user || user.email !== ADMIN_EMAIL){
+
+    showToast("Admin login required.","error");
+    return;
+
+  }
+
+  const item = joinRequestsData.find(j => j.id === id);
+
+  const ok = confirm(
+    'Futa ombi la "' + ((item && item.name) || "") + '"? Hii haiwezi kurudishwa.'
+  );
+
+  if(!ok){
+    return;
+  }
+
+  try{
+
+    await deleteDoc(doc(db,"joinRequests",id));
+
+    showToast("Ombi limefutwa.","success");
+
+  }catch(error){
+
+    console.error("JOIN DELETE ERROR:",error.code,error.message);
+
+    showToast("Imeshindikana kufuta ombi.","error");
+
+  }
+
+}
+
+
 function renderJoinRequests(){
 
   const container = document.getElementById("joinList");
@@ -2013,13 +2466,23 @@ function renderJoinRequests(){
     return;
   }
 
-  if(joinRequestsData.length === 0){
+  const isRegistered = item => item.status === "registered";
 
-    container.innerHTML = `<div class="empty">No join requests yet.</div>`;
+  const visible = joinRequestsData.filter(item =>
+    joinTab === "registered" ? isRegistered(item) : !isRegistered(item)
+  );
+
+  if(visible.length === 0){
+
+    container.innerHTML = `<div class="empty">${
+      joinTab === "registered"
+        ? "Hakuna waliosajiliwa bado."
+        : "Hakuna maombi mapya."
+    }</div>`;
 
   }else{
 
-    container.innerHTML = joinRequestsData.map(item => `
+    container.innerHTML = visible.map(item => `
 
       <div class="data-item">
         <strong>${escapeHtml(item.name)}</strong>
@@ -2029,13 +2492,115 @@ function renderJoinRequests(){
           item.phone,
           "Habari " + (item.name || "") + ", karibu St. Peter & Paul IFM Choir! Tumepokea ombi lako la kujiunga na kwaya. Tutakujulisha ratiba ya mazoezi hivi karibuni. Mungu akubariki."
         )}
+        <div class="contact-row">
+          ${isRegistered(item)
+            ? `<button class="contact-btn" onclick="setJoinStatus('${escapeHtml(item.id)}','new')">↩️ Rudisha kwenye Mpya</button>`
+            : `<button class="contact-btn ok" onclick="setJoinStatus('${escapeHtml(item.id)}','registered')">✅ Amesajiliwa</button>`}
+          <button class="del-btn" onclick="deleteJoinRequest('${escapeHtml(item.id)}')">🗑️ Futa</button>
+        </div>
       </div>
 
     `).join("");
 
   }
 
-  document.getElementById("joinCount").textContent = joinRequestsData.length;
+  const newCount = joinRequestsData.filter(item => !isRegistered(item)).length;
+  const regCount = joinRequestsData.length - newCount;
+
+  const tabNew = document.getElementById("joinTabNew");
+  const tabReg = document.getElementById("joinTabRegistered");
+
+  if(tabNew){
+    tabNew.textContent = "Mpya (" + newCount + ")";
+    tabNew.classList.toggle("active",joinTab === "new");
+  }
+
+  if(tabReg){
+    tabReg.textContent = "Wamesajiliwa (" + regCount + ")";
+    tabReg.classList.toggle("active",joinTab === "registered");
+  }
+
+  document.getElementById("joinCount").textContent = newCount;
+
+}
+
+
+function setDonorTab(tab){
+
+  donorTab = tab;
+
+  renderDonors();
+
+}
+
+
+async function setDonorStatus(id,status){
+
+  const user = auth.currentUser;
+
+  if(!user || user.email !== ADMIN_EMAIL){
+
+    showToast("Admin login required.","error");
+    return;
+
+  }
+
+  try{
+
+    await updateDoc(doc(db,"donations",id),{ status:status });
+
+    showToast(
+      status === "thanked"
+        ? "Amehamishiwa kwenye Wameshukuriwa."
+        : "Amerudishwa kwenye Mpya.",
+      "success"
+    );
+
+  }catch(error){
+
+    console.error("DONOR STATUS ERROR:",error.code,error.message);
+
+    showToast("Imeshindikana kubadilisha hali.","error");
+
+  }
+
+}
+
+
+async function deleteDonation(id){
+
+  const user = auth.currentUser;
+
+  if(!user || user.email !== ADMIN_EMAIL){
+
+    showToast("Admin login required.","error");
+    return;
+
+  }
+
+  const item = donorMessagesData.find(d => d.id === id);
+
+  const ok = confirm(
+    'Futa ujumbe wa "' + ((item && item.name) || "") + '"? Hii haiwezi kurudishwa.'
+  );
+
+  if(!ok){
+    return;
+  }
+
+  try{
+
+    await deleteDoc(doc(db,"donations",id));
+
+    showToast("Ujumbe umefutwa.","success");
+
+  }catch(error){
+
+    console.error("DONATION DELETE ERROR:",error.code,error.message);
+
+    showToast("Imeshindikana kufuta ujumbe.","error");
+
+  }
 
 }
 
@@ -2048,13 +2613,23 @@ function renderDonors(){
     return;
   }
 
-  if(donorMessagesData.length === 0){
+  const isThanked = item => item.status === "thanked";
 
-    container.innerHTML = `<div class="empty">No support messages yet.</div>`;
+  const visible = donorMessagesData.filter(item =>
+    donorTab === "thanked" ? isThanked(item) : !isThanked(item)
+  );
+
+  if(visible.length === 0){
+
+    container.innerHTML = `<div class="empty">${
+      donorTab === "thanked"
+        ? "Hakuna waliokwisha shukuriwa bado."
+        : "Hakuna michango mipya."
+    }</div>`;
 
   }else{
 
-    container.innerHTML = donorMessagesData.map(item => `
+    container.innerHTML = visible.map(item => `
 
       <div class="data-item">
         <strong>${escapeHtml(item.name)}</strong>
@@ -2063,16 +2638,38 @@ function renderDonors(){
         ${item.phone
           ? `<small>📞 ${escapeHtml(item.phone)}</small>` + contactButtons(
               item.phone,
-              "Habari " + (item.name || "") + ", tunakushukuru sana kwa mchango wako kwa St. Peter & Paul IFM Choir. Mungu akubariki sana."
+              "Habari " + (item.name || "") + ", tumepokea mchango wako wa " + (item.amount || "") + " kwa St. Peter & Paul IFM Choir. Tunakushukuru sana, Mungu akubariki na kukuzidishia."
             )
           : `<small>(Hakuacha namba ya simu)</small>`}
+        <div class="contact-row">
+          ${isThanked(item)
+            ? `<button class="contact-btn" onclick="setDonorStatus('${escapeHtml(item.id)}','new')">↩️ Rudisha kwenye Mpya</button>`
+            : `<button class="contact-btn ok" onclick="setDonorStatus('${escapeHtml(item.id)}','thanked')">✅ Nimeshukuru</button>`}
+          <button class="del-btn" onclick="deleteDonation('${escapeHtml(item.id)}')">🗑️ Futa</button>
+        </div>
       </div>
 
     `).join("");
 
   }
 
-  document.getElementById("donorCount").textContent = donorMessagesData.length;
+  const newCount = donorMessagesData.filter(item => !isThanked(item)).length;
+  const thankedCount = donorMessagesData.length - newCount;
+
+  const tabNew = document.getElementById("donorTabNew");
+  const tabThanked = document.getElementById("donorTabThanked");
+
+  if(tabNew){
+    tabNew.textContent = "Mpya (" + newCount + ")";
+    tabNew.classList.toggle("active",donorTab === "new");
+  }
+
+  if(tabThanked){
+    tabThanked.textContent = "Wameshukuriwa (" + thankedCount + ")";
+    tabThanked.classList.toggle("active",donorTab === "thanked");
+  }
+
+  document.getElementById("donorCount").textContent = newCount;
 
 }
 
@@ -2705,6 +3302,8 @@ document.querySelectorAll(".modal").forEach(modal => {
 
 startAnnouncementListener();
 
+startMembersListener();
+
 renderSongs();
 
 
@@ -2824,7 +3423,18 @@ Object.assign(window,{
   deleteAnnouncement,
   enableNotifications,
   installApp,
-  toggleLike
+  toggleLike,
+
+  setJoinTab,
+  setJoinStatus,
+  deleteJoinRequest,
+
+  handleAddMember,
+  removeMember,
+
+  setDonorTab,
+  setDonorStatus,
+  deleteDonation
 
 });
 
