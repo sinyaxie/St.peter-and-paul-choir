@@ -558,11 +558,59 @@ a{color:inherit;text-decoration:none}
   .gallery-item{width:150px}
   .gallery-item img{height:150px}
 }
+
+/* ICONS */
+.ic{width:1.15em;height:1.15em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:-0.2em}
+.ic.solid{fill:currentColor;stroke-width:1.5}
+.btn,.nav-item,.small-btn,.contact-btn,.del-btn,.filter-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.nav-item{display:flex;justify-content:flex-start}
+.menu-btn,.close-btn{display:grid;place-items:center;padding:0;cursor:pointer}
+.menu-btn .ic{width:24px;height:24px}
+.close-btn .ic{width:20px;height:20px}
+.like-btn.liked .ic{fill:currentColor}
+.social-btn .s-icon .ic{width:32px;height:32px}
+.drawer-social a{display:flex;align-items:center;justify-content:center;gap:8px}
+.drawer-social .row{flex-direction:column}
+.verse-card .cross .ic{width:34px;height:34px}
+.login-logo div .ic{width:32px;height:32px}
+.song-icon .ic{width:22px;height:22px}
+.event-meta .ic{width:15px;height:15px;margin-right:5px;color:var(--gold)}
+.small-btn.fix{display:inline-flex}
 </style>
 </head>
 
 <body>
-
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.5v.01"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+<symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18 14.3c2.2.6 3.5 2.4 3.5 5.2"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4z"/><path d="M10 21h4"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 20h16"/></symbol>
+<symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-8-4.9-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 9c0 6.1-8 11-8 11z"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></symbol>
+<symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5a7 7 0 00-14 0C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/></symbol>
+<symbol id="i-cross" viewBox="0 0 24 24"><path d="M12 3v18M6 9h12"/></symbol>
+<symbol id="i-youtube" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.5v5l4.5-2.5z"/></symbol>
+<symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.500 6.500v.01"/></symbol>
+<symbol id="i-tiktok" viewBox="0 0 24 24"><path d="M14 3v11.500a3.500 3.500 0 11-3.500-3.500"/><path d="M14 3c.4 2.600 2.200 4.300 5 4.500"/></symbol>
+<symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M3 21l1.500-4.600A8.500 8.500 0 1112 20.500a8.500 8.500 0 01-4-1z"/><path d="M9 8.500c0 3.500 3 6.500 6.500 6.500l1-1.500-2-1-1 .8a4 4 0 01-2-2l.8-1-1-2z"/></symbol>
+</svg>
 <div class="app">
 
   <!-- HEADER -->
@@ -575,7 +623,7 @@ a{color:inherit;text-decoration:none}
       </div>
     </div>
 
-    <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu">☰</button>
+    <button class="menu-btn" onclick="openDrawer()" aria-label="Open menu"><svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg></button>
   </header>
 
   <div id="firebaseStatus" class="firebase-status">
@@ -650,7 +698,7 @@ a{color:inherit;text-decoration:none}
 
     <section class="section">
       <div class="verse-card">
-        <div class="cross">✝</div>
+        <div class="cross"><svg class="ic" aria-hidden="true"><use href="#i-cross"/></svg></div>
         <p>“Mwimbieni Bwana wimbo mpya; kwa maana ametenda mambo ya ajabu.”</p>
         <span>Zaburi 98:1</span>
       </div>
@@ -669,21 +717,21 @@ a{color:inherit;text-decoration:none}
           <a class="social-btn social-youtube"
              href="https://youtube.com/@stspeterandpaulifm"
              target="_blank" rel="noopener noreferrer">
-            <span class="s-icon">▶️</span>
+            <span class="s-icon"><svg class="ic" aria-hidden="true"><use href="#i-youtube"/></svg></span>
             <span>YouTube<br><small>Tazama nyimbo zetu</small></span>
           </a>
 
           <a class="social-btn social-instagram"
              href="https://www.instagram.com/sts_peter_and_paul_choir_ifm"
              target="_blank" rel="noopener noreferrer">
-            <span class="s-icon">📸</span>
+            <span class="s-icon"><svg class="ic" aria-hidden="true"><use href="#i-instagram"/></svg></span>
             <span>Instagram<br><small>Picha na matukio</small></span>
           </a>
 
           <a class="social-btn social-tiktok"
              href="https://www.tiktok.com/@st..peter.and.pau5"
              target="_blank" rel="noopener noreferrer">
-            <span class="s-icon">🎵</span>
+            <span class="s-icon"><svg class="ic" aria-hidden="true"><use href="#i-tiktok"/></svg></span>
             <span>TikTok<br><small>Video fupi za kwaya</small></span>
           </a>
 
@@ -820,7 +868,7 @@ a{color:inherit;text-decoration:none}
       <div class="login-box">
 
         <div class="login-logo">
-          <div>✝</div>
+          <div><svg class="ic" aria-hidden="true"><use href="#i-cross"/></svg></div>
           <h2>Choir Admin</h2>
           <p style="color:#777;margin-top:5px">Admin access only</p>
         </div>
@@ -971,7 +1019,7 @@ a{color:inherit;text-decoration:none}
                 </select>
               </div>
 
-              <button class="btn btn-primary" style="width:100%" type="submit">➕ Ongeza Mwanakwaya</button>
+              <button class="btn btn-primary" style="width:100%" type="submit"><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg> Ongeza Mwanakwaya</button>
 
             </form>
 
@@ -1013,28 +1061,28 @@ a{color:inherit;text-decoration:none}
 
     <div class="drawer-head">
       <h3>Menu</h3>
-      <button class="close-btn" onclick="closeDrawer()">✕</button>
+      <button class="close-btn" onclick="closeDrawer()" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
     </div>
 
     <div class="nav-list">
-      <button class="nav-item" onclick="goTo('page-front')">🏠 Home</button>
-      <button class="nav-item" onclick="goTo('page-about')">ℹ️ About Choir</button>
-      <button class="nav-item" onclick="goTo('page-events')">📅 Events & Announcements</button>
-      <button class="nav-item" onclick="goTo('page-music')">🎵 Music</button>
-      <button class="nav-item" onclick="goTo('page-members')">👥 Wanakwaya</button>
-      <button class="nav-item" onclick="enableNotifications()">🔔 Washa Arifa</button>
-      <button id="installBtn" class="nav-item" style="display:none" onclick="installApp()">📲 Weka App kwenye Simu</button>
-      <button class="nav-item" onclick="openJoinModal();closeDrawer()">🎤 Join Choir</button>
-      <button class="nav-item" onclick="openSupport();closeDrawer()">❤️ Support Choir</button>
-      <button class="nav-item gold" onclick="goToLogin()">🔐 Admin</button>
+      <button class="nav-item" onclick="goTo('page-front')"><svg class="ic" aria-hidden="true"><use href="#i-home"/></svg> Home</button>
+      <button class="nav-item" onclick="goTo('page-about')"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg> About Choir</button>
+      <button class="nav-item" onclick="goTo('page-events')"><svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg> Events & Announcements</button>
+      <button class="nav-item" onclick="goTo('page-music')"><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg> Music</button>
+      <button class="nav-item" onclick="goTo('page-members')"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg> Wanakwaya</button>
+      <button class="nav-item" onclick="enableNotifications()"><svg class="ic" aria-hidden="true"><use href="#i-bell"/></svg> Washa Arifa</button>
+      <button id="installBtn" class="nav-item" style="display:none" onclick="installApp()"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg> Weka App kwenye Simu</button>
+      <button class="nav-item" onclick="openJoinModal();closeDrawer()"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg> Join Choir</button>
+      <button class="nav-item" onclick="openSupport();closeDrawer()"><svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg> Support Choir</button>
+      <button class="nav-item gold" onclick="goToLogin()"><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg> Admin</button>
     </div>
 
     <div class="drawer-social">
       <p>Tufuatilie</p>
       <div class="row">
-        <a style="background:#e00" href="https://youtube.com/@stspeterandpaulifm" target="_blank" rel="noopener noreferrer">YouTube</a>
-        <a style="background:#dc2743" href="https://www.instagram.com/sts_peter_and_paul_choir_ifm" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <a style="background:#111" href="https://www.tiktok.com/@st..peter.and.pau5" target="_blank" rel="noopener noreferrer">TikTok</a>
+        <a style="background:#e00" href="https://youtube.com/@stspeterandpaulifm" target="_blank" rel="noopener noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-youtube"/></svg> YouTube</a>
+        <a style="background:#dc2743" href="https://www.instagram.com/sts_peter_and_paul_choir_ifm" target="_blank" rel="noopener noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-instagram"/></svg> Instagram</a>
+        <a style="background:#111" href="https://www.tiktok.com/@st..peter.and.pau5" target="_blank" rel="noopener noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-tiktok"/></svg> TikTok</a>
       </div>
     </div>
 
@@ -1047,7 +1095,7 @@ a{color:inherit;text-decoration:none}
 
     <div class="modal-head">
       <h3>Join St. Peter & Paul Choir</h3>
-      <button class="close-btn" onclick="closeJoinModal()">✕</button>
+      <button class="close-btn" onclick="closeJoinModal()" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
     </div>
 
     <form onsubmit="handleJoinSubmit(event)">
@@ -1089,14 +1137,14 @@ a{color:inherit;text-decoration:none}
 
     <div class="modal-head">
       <h3>Support Our Choir</h3>
-      <button class="close-btn" onclick="closeSupport()">✕</button>
+      <button class="close-btn" onclick="closeSupport()" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#i-close"/></svg></button>
     </div>
 
     <div class="card" style="box-shadow:none;margin-bottom:18px;background:#f8f5ec">
       <p style="font-size:13px;color:#777">LIPA KWA M-PESA</p>
       <h2 style="color:var(--blue);margin:5px 0">352348594</h2>
       <p>Jina: <strong>St. Peter & Paul IFM Choir</strong></p>
-      <button class="small-btn" style="margin-top:12px" onclick="copyAccount()">Copy Namba ya Lipa</button>
+      <button class="small-btn" style="margin-top:12px" onclick="copyAccount()"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg> Copy Namba ya Lipa</button>
     </div>
 
     <form onsubmit="handleSupportSubmit(event)">
@@ -1132,7 +1180,7 @@ a{color:inherit;text-decoration:none}
 
 <!-- SONG ALERT -->
 <div id="songAlert" class="song-alert">
-  <strong>🎵 New Song</strong>
+  <strong><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg> New Song</strong>
   <p>Kuna Nini Leo Bethlehemu</p>
   <div class="song-alert-actions">
     <button class="alert-open" onclick="openSong()">Listen</button>
@@ -1679,9 +1727,9 @@ function renderAnnouncements(){
           <h3>${escapeHtml(item.title || "")}</h3>
 
           <div class="event-meta">
-            ${item.date ? `📅 ${escapeHtml(formatDate(item.date))}` : ""}
-            ${item.time ? `<br>🕐 ${escapeHtml(item.time)}` : ""}
-            ${item.location ? `<br>📍 ${escapeHtml(item.location)}` : ""}
+            ${item.date ? `<svg class="ic" aria-hidden="true"><use href="#i-calendar"/></svg> ${escapeHtml(formatDate(item.date))}` : ""}
+            ${item.time ? `<br><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg> ${escapeHtml(item.time)}` : ""}
+            ${item.location ? `<br><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg> ${escapeHtml(item.location)}` : ""}
           </div>
 
           ${item.body ? `<p>${escapeHtml(item.body)}</p>` : ""}
@@ -1747,7 +1795,7 @@ function likeButtonHtml(item){
       class="like-btn ${liked ? "liked" : ""}"
       onclick="toggleLike('${escapeHtml(item.id)}')"
       aria-label="Penda tangazo">
-      ${liked ? "❤️" : "🤍"} <span>${count}</span>
+      <svg class="ic" aria-hidden="true"><use href="#i-heart"/></svg> <span>${count}</span>
     </button>
   `;
 
@@ -2090,9 +2138,9 @@ function contactButtons(phone,text){
 
   return `
     <div class="contact-row">
-      <a class="contact-btn wa" href="https://wa.me/${intl}?text=${msg}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-      <a class="contact-btn" href="tel:+${intl}">📞 Piga</a>
-      <a class="contact-btn" href="sms:+${intl}?body=${msg}">✉️ SMS</a>
+      <a class="contact-btn wa" href="https://wa.me/${intl}?text=${msg}" target="_blank" rel="noopener noreferrer"><svg class="ic" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp</a>
+      <a class="contact-btn" href="tel:+${intl}"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> Piga</a>
+      <a class="contact-btn" href="sms:+${intl}?body=${msg}"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg> SMS</a>
     </div>
   `;
 
@@ -2236,7 +2284,7 @@ function renderMembers(){
 
               <div class="admin-ann">
                 <span>${escapeHtml(m.name)}</span>
-                <button class="del-btn" onclick="removeMember('${escapeHtml(m.id)}')">🗑️ Toa</button>
+                <button class="del-btn" onclick="removeMember('${escapeHtml(m.id)}')"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg> Toa</button>
               </div>
 
             `).join("")}
@@ -2486,17 +2534,17 @@ function renderJoinRequests(){
 
       <div class="data-item">
         <strong>${escapeHtml(item.name)}</strong>
-        <small>📞 ${escapeHtml(item.phone)}</small>
-        <small>🎤 ${escapeHtml(item.voice || "Not specified")}</small>
+        <small><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> ${escapeHtml(item.phone)}</small>
+        <small><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg> ${escapeHtml(item.voice || "Not specified")}</small>
         ${contactButtons(
           item.phone,
           "Habari " + (item.name || "") + ", karibu St. Peter & Paul IFM Choir! Tumepokea ombi lako la kujiunga na kwaya. Tutakujulisha ratiba ya mazoezi hivi karibuni. Mungu akubariki."
         )}
         <div class="contact-row">
           ${isRegistered(item)
-            ? `<button class="contact-btn" onclick="setJoinStatus('${escapeHtml(item.id)}','new')">↩️ Rudisha kwenye Mpya</button>`
-            : `<button class="contact-btn ok" onclick="setJoinStatus('${escapeHtml(item.id)}','registered')">✅ Amesajiliwa</button>`}
-          <button class="del-btn" onclick="deleteJoinRequest('${escapeHtml(item.id)}')">🗑️ Futa</button>
+            ? `<button class="contact-btn" onclick="setJoinStatus('${escapeHtml(item.id)}','new')"><svg class="ic" aria-hidden="true"><use href="#i-undo"/></svg> Rudisha kwenye Mpya</button>`
+            : `<button class="contact-btn ok" onclick="setJoinStatus('${escapeHtml(item.id)}','registered')"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg> Amesajiliwa</button>`}
+          <button class="del-btn" onclick="deleteJoinRequest('${escapeHtml(item.id)}')"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg> Futa</button>
         </div>
       </div>
 
@@ -2636,16 +2684,16 @@ function renderDonors(){
         <small>Amount: ${escapeHtml(item.amount)}</small>
         ${item.message ? `<small>${escapeHtml(item.message)}</small>` : ""}
         ${item.phone
-          ? `<small>📞 ${escapeHtml(item.phone)}</small>` + contactButtons(
+          ? `<small><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg> ${escapeHtml(item.phone)}</small>` + contactButtons(
               item.phone,
               "Habari " + (item.name || "") + ", tumepokea mchango wako wa " + (item.amount || "") + " kwa St. Peter & Paul IFM Choir. Tunakushukuru sana, Mungu akubariki na kukuzidishia."
             )
           : `<small>(Hakuacha namba ya simu)</small>`}
         <div class="contact-row">
           ${isThanked(item)
-            ? `<button class="contact-btn" onclick="setDonorStatus('${escapeHtml(item.id)}','new')">↩️ Rudisha kwenye Mpya</button>`
-            : `<button class="contact-btn ok" onclick="setDonorStatus('${escapeHtml(item.id)}','thanked')">✅ Nimeshukuru</button>`}
-          <button class="del-btn" onclick="deleteDonation('${escapeHtml(item.id)}')">🗑️ Futa</button>
+            ? `<button class="contact-btn" onclick="setDonorStatus('${escapeHtml(item.id)}','new')"><svg class="ic" aria-hidden="true"><use href="#i-undo"/></svg> Rudisha kwenye Mpya</button>`
+            : `<button class="contact-btn ok" onclick="setDonorStatus('${escapeHtml(item.id)}','thanked')"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg> Nimeshukuru</button>`}
+          <button class="del-btn" onclick="deleteDonation('${escapeHtml(item.id)}')"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg> Futa</button>
         </div>
       </div>
 
@@ -2972,8 +3020,8 @@ function renderAdminAnnouncements(){
       </div>
 
       <button class="del-btn" onclick="deleteAnnouncement('${escapeHtml(item.id)}',this)">
-        🗑️ Futa
-      </button>
+        <svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg> Futa
+</button>
 
     </div>
 
@@ -3062,7 +3110,7 @@ function saveSeenIds(ids){
 
 async function showLocalNotification(item){
 
-  const title = "📢 " + (item.title || "Tangazo jipya");
+  const title = item.title || "Tangazo jipya";
 
   const options = {
     body:item.body ? String(item.body).slice(0,120) : "Kuna tangazo jipya kutoka St. Peter & Paul Choir",
@@ -3229,7 +3277,7 @@ function renderSongs(){
 
       <div class="song-left">
 
-        <div class="song-icon">♪</div>
+        <div class="song-icon"><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg></div>
 
         <div>
           <h3>${escapeHtml(song.title)}</h3>
@@ -3245,16 +3293,16 @@ function renderSongs(){
           href="${escapeHtml(song.youtube)}"
           target="_blank"
           rel="noopener noreferrer">
-          ▶ Listen
-        </a>
+          <svg class="ic solid" aria-hidden="true"><use href="#i-play"/></svg> Listen
+</a>
 
         <a
           class="small-btn"
           href="${escapeHtml(song.pdf)}"
           target="_blank"
           rel="noopener noreferrer">
-          📄 Lyrics
-        </a>
+          <svg class="ic" aria-hidden="true"><use href="#i-file"/></svg> Lyrics
+</a>
 
       </div>
 
